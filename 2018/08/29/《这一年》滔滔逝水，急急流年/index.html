@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          KVC实现原理 - nenhall | 小浩浩工作室
+          《这一年》滔滔逝水，急急流年 - nenhall | 小浩浩工作室
         
     </title>
 
-    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/KVC实现原理/">
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2018/08/29/《这一年》滔滔逝水，急急流年/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('Demo.png')
+            background-image: url('null')
             /*post*/
         
     }
@@ -90,16 +90,12 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
-                            
-                              <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
-                            
                         </div>
-                        <h1>KVC实现原理</h1>
-                        <h2 class="subheading">KVC的底层实现原理解析</h2>
+                        <h1>《这一年》滔滔逝水，急急流年</h1>
+                        <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by nenhall on
-                            2018-08-17
+                            2018-08-29
                         </span>
                     </div>
                 
@@ -223,33 +219,25 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h4><span id="kvc的全称是key-value-coding俗称键值编码可以通过一个key来访问某个属性">KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性</span></h4>
-<h4><span id="常见的api有">常见的API有</span></h4>
-<ul>
-<li>- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;</li>
-<li>- (void)setValue:(id)value forKey:(NSString *)key;</li>
-<li>- (id)valueForKeyPath:(NSString *)keyPath;</li>
-<li>- (id)valueForKey:(NSString *)key;</li>
-</ul>
-<h4><span id="set时的查找顺序">set时的查找顺序：</span></h4>
-<p>先查找<code>setkey： _setkey</code>如果找到就调用，否则调用<code>+(BOOL)accessInstanceVariablesDirectly</code>，如果这个函数返回的是YES，就会按<code>_key 、_isKey 、key 、isKey</code>的顺序查找对应的成员变量，如果找到，就调用，否则抛异常，如下图。</p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816210006.png" alt=""><br>
-<img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816210104.png" alt=""></p>
-<p>联想到的相关问答：</p>
-<ol>
-<li>
-<p>通过KVC修改属性会触发KVO吗？</p>
-<p>会触发KVO，KVO内部是会调用willChangeValueForKey:、 didChangeVlaueForKey:方法的，口说无凭，我们去重写下对象的这两个方法，看它会不会来；</p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816211239.png" alt="重写下对象的这两个方法"></p>
-<p>//断点后</p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816211311.png" alt="断点后"></p>
-</li>
-</ol>
-<h3><span id="get时的查找顺序">get时的查找顺序</span></h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@interface Person : NSObject</span><br><span class="line">&#123;//申明对应的成员变量，便于验证</span><br><span class="line">    @public</span><br><span class="line">    int age;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line">//给对应的成员变量赋予不同的值，便于验证识别</span><br><span class="line">- (int)getAge &#123;</span><br><span class="line">    return 11;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)age &#123;</span><br><span class="line">    return 12;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)isAge &#123;</span><br><span class="line">    return 13;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)_age &#123;</span><br><span class="line">    return 14;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        Person *person = [[Person alloc] init];</span><br><span class="line">        person-&gt;_age = 10;</span><br><span class="line">        //依次注释Person类的另外三个方法，再运行项目，你会发现它会依次进行查找，知道四个方法都没有的时候然后抛异常</span><br><span class="line">        NSLog(@&quot;%@&quot;, [person valueForKey:@&quot;age&quot;]);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816212048.png" alt=""></p>
-<p>Please <a class="github-button" href="https://github.com/nenhall/NHHUDExtend" data-icon="octicon-star" aria-label="Star nenhall/NHHUDExtend on GitHub" target="_blank" rel="noopener">Star</a> this Project if you like it! <a class="github-button" href="https://github.com/nenhall" aria-label="Follow @nenhall on GitHub" target="_blank" rel="noopener">Follow</a> would also be appreciated!<br>
-Peace!</p>
+                <p>滔滔逝水，急急流年，几几个这一年弹指飞过，回首前尘，恍如一梦。<br>
+这一年我们很小，我们有很多的差不多年龄的人一起无忧无虑的玩耍，再是一起在乡村上小学一直到上初中都可以不分开，</p>
+<p>这一年我们初中毕业，也是我们的一过分离点或许此时的我们还会考入同一学校，这一年的年尾我们都会回家，相隔半年的我们可以相聚，一起诉说自己第一次走出自己家乡的感觉、更有说不玩的趣事，待过年后正月初，又各奔西东.</p>
+<p>这一年手机或在这时便成了我们唯一的通信工具，这时我们有很多的时间聊天，说在久也不会觉没话题，每登陆QQ都会有许多的未读信息，还有我们有趣的视频聊天。这一年又将至年末，我们也会回家，回到家中我们都见面了，更多人说的第一句话是“你变了”，到底那时所说的你变了是什么变，其实就是变高了或变胖瘦或变黑变白变帅变美变开朗而已，这一句你变了就这么简单！</p>
+<p>这一年王子跟公主的故事开始在我们身上流传____我们恋爱了，我们很天真、很单纯，单纯的孤单变成了单纯的爱情。其实这一刻也是了解寂寞的开始。</p>
+<p>一年一年，我们都越来越少回家，也都有手机了，而我们通电话的次数、时间也随之变，而QQ上所发的信息远比手机上的信息要多。以前总想着自己毕业后要怎么努力的工作，要怎么风风光光的回家乡，或许轻轻松松的许下句诺言“要是不能怎么样我就不回家，直到怎样了再回家”到后面才知道自己许下的诺言是多么的沉重，它需要多大的决心，但自己知道当初能有这处想法，就定有这个坚强的毅力.</p>
+<p>这一年毕业了。</p>
+<p>这一年失恋了，懵懂的来，懵懂走！<br>
+我们可以狠心的对自己，但我们无法摆脱家人的思念，每次电话中传的亲切、熟悉的声音，年末将到，家人知道你会有不想回家的想法，但他们会说“没事，我们希望你们在外能平平安安，刚出到外面，赚多少钱都不重要”这时听这句话感觉很自然。但这一年还是没回家。</p>
+<p>这一年对社会了解更多了，看到别人即便是一个小小的舞台，TA都能活得如此疯狂，而我像只沉默的羔羊。于是我也向往着另一种生活，后面才发现是那么的不知天高地厚。而这一年在电话里头的家人会说“重要的是能平平安安，钱呢！记得不要乱花就是了，能省就省点，但是吃的地方就要省了，今年要回家吧！都两年没回家了，家人也想你啊！”听了总是那么的心酸！所以回家了。每个人自己向往的生活，自己的梦想，联系也变得更少了，手机上都是你有时间我没时间，你没时间我有时间；而QQ上是：你我都知道我在隐身，你在暗处。其实这个时候我们已经变得惆怅，而这个时间的理由很简单，就是不想说话。<br>
+这一年听到《遇见》，认定瞬间捕着了眼眸的你，从遇见、认识、了解、爱、相依偎、痴，over…再想不再想，谁是谁非，或许爱情里没有谁错谁对，只是还没来得及做好准备…所以注定它会被作废。又一次青春的过滤、淘汰纯真的旅行，那些路过的风景，有多少我们难以割舍的真情？看着一片片飘零的落叶，我来不及说些什么，想起身边的朋友，我们来不及说声“问候”，才发现如今的我丢了纯真的笑脸，我们就这样默默的成长着，都在为自己的目标奋斗、忙碌，联系也变少…慢慢的，慢慢的，我在想会不会到我们都忘记的那一天，生活也变得简单上班下下班睡觉；在这个时候更多的是音乐陪伴着我们，同时感伤也慢慢的侵蚀着我的生活，在语言中，变得更加安静，有许多话我们都知道不必多说，都懂的，该掩埋的掩埋了，该收藏的收藏了；留下更多的时间去深思。也不知道过了多久，我怎么会在这里，仿佛是昨天我还在想明天会怎样，然后那个昨天的明天却没有怎么样，只是丢失以往有的某份信任，我难以去相信出现在身边一切事物，以前相信嘴上说的都可以当真的；以前的以后不相嘴里所说的相信自己所看到的；以后的现在变得都不愿去相信，变得喜欢去揣测别人的心思，只相信自己；简单的也因此变得复杂,有的朋友说是你太悲观了，我也在思索这个问题，为什么我会变得悲观，是什么东西改变了我,更多的事情我们都不愿去承认，也不去否认，明明是别人说对的事情，只是一笑了之；甚至不愿去承认自己的感觉。<br>
+没有勇气再去说些什么，有些话可能就这辈子都不会再那样的说出来，有些事也就不会那样轻易就去做。<br>
+这一年，原来这一年我在这里<br>
+其实我一直在这里，只是我也现在才知道我一直在这里。<br>
+你知道世间最长的是什么东西吗?最短暂又是什么？其实都是时间，只是两种意义上不同的时间!<br>
+滔滔逝水，急急流年，几几个这一年弹指飞过，回首前尘，恍如一梦。<br>
+如何又如何！谁翻乐府凄凉曲？风也萧萧，雨也萧萧，瘦尽灯花又一宵.不知何事萦怀抱，醒也无聊，醉也无聊，梦也何曾到谢桥。 不是不知何事萦怀抱，而是知道也无能为力。解得开的就不叫心结，放得下的又怎会今生今世意难平？</p>
+<p>不久、不久后一阵阵寒流会让窝在被窉里不愿出来，原来又是一个冬季的到来，朋友时间过得很，有什么要做的就得抓紧了，一年又要过去了有些东西错过了可能就真的错过了；<br>
+人生，有多少事多少情绪是说不清道不明的呢？而等你想去说明的时候，已经没有机会了？在珍惜和忽略得到与失去之间，人不断地辗转。</p>
 
                 
 
@@ -258,12 +246,12 @@ Peace!</p>
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2018/08/29/Mac开机一直卡在进度条界面/" data-toggle="tooltip" data-placement="top" title="Mac开机一直卡在进度条界面">&larr; Previous Post</a>
+                            <a href="/2018/08/29/第十九支烟/" data-toggle="tooltip" data-placement="top" title="第十九支烟">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2018/08/17/NSObject的本质/" data-toggle="tooltip" data-placement="top" title="NSObject的本质">Next Post &rarr;</a>
+                            <a href="/2018/08/29/iOS-armv7-armv7s-arm64区别与应用32位、64位配置/" data-toggle="tooltip" data-placement="top" title="iOS armv7, armv7s, arm64区别与应用32位、64位配置">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -293,7 +281,7 @@ Peace!</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">常见的API有</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">set时的查找顺序：</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text">get时的查找顺序</span></a>
+          <ol class="nav">none</ol>
         
         </div>
       </aside>
@@ -313,10 +301,6 @@ Peace!</p>
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
-                        
-                          <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
-                        
                     </div>
                 </section>
                 
@@ -335,8 +319,8 @@ Peace!</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/KVC实现原理/";
-    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/KVC实现原理/";
+    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/29/《这一年》滔滔逝水，急急流年/";
+    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/29/《这一年》滔滔逝水，急急流年/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

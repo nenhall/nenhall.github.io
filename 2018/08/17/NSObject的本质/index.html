@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          KVC实现原理 - nenhall | 小浩浩工作室
+          NSObject的本质 - nenhall | 小浩浩工作室
         
     </title>
 
-    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/KVC实现原理/">
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/NSObject的本质/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('Demo.png')
+            background-image: url('undefined')
             /*post*/
         
     }
@@ -95,8 +95,8 @@
                               <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
                             
                         </div>
-                        <h1>KVC实现原理</h1>
-                        <h2 class="subheading">KVC的底层实现原理解析</h2>
+                        <h1>NSObject的本质</h1>
+                        <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by nenhall on
                             2018-08-17
@@ -223,33 +223,82 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h4><span id="kvc的全称是key-value-coding俗称键值编码可以通过一个key来访问某个属性">KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性</span></h4>
-<h4><span id="常见的api有">常见的API有</span></h4>
-<ul>
-<li>- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;</li>
-<li>- (void)setValue:(id)value forKey:(NSString *)key;</li>
-<li>- (id)valueForKeyPath:(NSString *)keyPath;</li>
-<li>- (id)valueForKey:(NSString *)key;</li>
-</ul>
-<h4><span id="set时的查找顺序">set时的查找顺序：</span></h4>
-<p>先查找<code>setkey： _setkey</code>如果找到就调用，否则调用<code>+(BOOL)accessInstanceVariablesDirectly</code>，如果这个函数返回的是YES，就会按<code>_key 、_isKey 、key 、isKey</code>的顺序查找对应的成员变量，如果找到，就调用，否则抛异常，如下图。</p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816210006.png" alt=""><br>
-<img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816210104.png" alt=""></p>
-<p>联想到的相关问答：</p>
+                <h3><span id="nsobject的编译过程">NSObject的编译过程：</span></h3>
+<blockquote>
 <ol>
-<li>
-<p>通过KVC修改属性会触发KVO吗？</p>
-<p>会触发KVO，KVO内部是会调用willChangeValueForKey:、 didChangeVlaueForKey:方法的，口说无凭，我们去重写下对象的这两个方法，看它会不会来；</p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816211239.png" alt="重写下对象的这两个方法"></p>
-<p>//断点后</p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816211311.png" alt="断点后"></p>
-</li>
+<li>我们平时编写的oc代码，底层实现其实都是C/C++代码：<br>
+Objective-C &gt; C/C++ &gt; 汇编语言 &gt; 机器语言代码</li>
+<li>Objective-C对象主要是基于C/C++的结构体来实现的.</li>
 </ol>
-<h3><span id="get时的查找顺序">get时的查找顺序</span></h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@interface Person : NSObject</span><br><span class="line">&#123;//申明对应的成员变量，便于验证</span><br><span class="line">    @public</span><br><span class="line">    int age;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line">//给对应的成员变量赋予不同的值，便于验证识别</span><br><span class="line">- (int)getAge &#123;</span><br><span class="line">    return 11;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)age &#123;</span><br><span class="line">    return 12;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)isAge &#123;</span><br><span class="line">    return 13;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)_age &#123;</span><br><span class="line">    return 14;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        Person *person = [[Person alloc] init];</span><br><span class="line">        person-&gt;_age = 10;</span><br><span class="line">        //依次注释Person类的另外三个方法，再运行项目，你会发现它会依次进行查找，知道四个方法都没有的时候然后抛异常</span><br><span class="line">        NSLog(@&quot;%@&quot;, [person valueForKey:@&quot;age&quot;]);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816212048.png" alt=""></p>
-<p>Please <a class="github-button" href="https://github.com/nenhall/NHHUDExtend" data-icon="octicon-star" aria-label="Star nenhall/NHHUDExtend on GitHub" target="_blank" rel="noopener">Star</a> this Project if you like it! <a class="github-button" href="https://github.com/nenhall" aria-label="Follow @nenhall on GitHub" target="_blank" rel="noopener">Follow</a> would also be appreciated!<br>
-Peace!</p>
+</blockquote>
+<h3><span id="oc代码转成c代码">OC代码转成C++代码：</span></h3>
+<p><strong>我们需要借助转换后的代码来分析</strong></p>
+<blockquote>
+<p>终端命令：<code>xcrun -sdk iphoneos clang -arch arm64 -rewrite-obj xxx.m -o xxx.cpp</code><br>
+不指定平台与架构:<code>clang -rewrite-obj xxx.m -o xxx.cpp</code><br>
+iphoneos代表要编译的平台，-arch arm64代表平台架构 xxx代表文件名，-o为输出文件；如果报缺少某个库，加参数：-framework 库名</p>
+</blockquote>
+<h3><span id="nsobject的implementation">NSObject的Implementation：</span></h3>
+<p>参考：<a href="https://opensource.apple.com/tarballs" target="_blank" rel="noopener">苹果源码</a> 、<a href="xxx.cpp">刚才转换出来的xxx.cpp文件</a> 、<a href="http://www.gnu.org/software/libc/" target="_blank" rel="noopener">GNU源码</a></p>
+<h4><span id="借助转换后后c代码来分析以下转换后的关键代码">借助转换后后C++代码来分析，以下转换后的关键代码：</span></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//NSObject 定义:也就是说NSObject其实是一个isa指针，指向Class，</span><br><span class="line">//而Class又指向了一个`objc_class`，`objc_class`就是一个结构体，如下:</span><br><span class="line">@interface NSobject &#123;</span><br><span class="line">    Class isa;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//NSObject Implementation</span><br><span class="line">struct NSObject_IMPL &#123;</span><br><span class="line">    Class isa; // isa是一个指针，在64位环境下占8个字节</span><br><span class="line">&#125;;</span><br><span class="line">typedef struct objc_class *Class;//`objc_class`就是一个结构体</span><br><span class="line"></span><br><span class="line">/// Represents an instance of a class.</span><br><span class="line">struct objc_object &#123;</span><br><span class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">NSObject *obj = [[NSObject alloc] init];</span><br><span class="line">        </span><br><span class="line">// 获得NSObject实例对象的成员变量所占用的大小 &gt;&gt; 8</span><br><span class="line">NSLog(@&quot;%zd&quot;, class_getInstanceSize([NSObject class]));</span><br><span class="line">        </span><br><span class="line">// 获得obj指针所指向内存的大小 &gt;&gt; 16</span><br><span class="line">NSLog(@&quot;%zd&quot;, malloc_size((__bridge const void *)obj));</span><br></pre></td></tr></table></figure>
+<h3><span id="相关问题一nsobject占用多少个字节">相关问题一：NSObject占用多少个字节</span></h3>
+<blockquote>
+<p>从上面的打印可知，Class isa本身占用8个字节，NSObject *obj占16个字节，为什么占16个呢？</p>
+</blockquote>
+<ul>
+<li>进一步分析证明：创建一个继承自<code>NSObject</code>带有成员变量的<code>Student</code>对象，如下：
+<ul>
+<li>猜想：按上面的结论一个<code>NSObject</code>实例对象占用16个字节，那下面可能这个<code>Student</code>实例对象应该占用4+4+16 = 24；</li>
+<li>实际：是占用了16个字节， 因为8+4+4=16，没有超过16，也就相当于NSObject的16个字节，有8个其实像是预留的，具体看下面的代码结论。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">//申明一个继承自NSObject对象的Student</span><br><span class="line">@interface Student : NSObject &#123;	</span><br><span class="line">    @public</span><br><span class="line">    int _sex;</span><br><span class="line">    int _age;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line">@implementation Student</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//转换成c++后的代码：</span><br><span class="line">struct Student_IMPL &#123;</span><br><span class="line">    struct NSObject_IMPL NSObject_IVARS;//8个字节</span><br><span class="line">    int _grade;//4个字节</span><br><span class="line">    int _age;  //4个字节</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct NSObject_IMPL &#123;</span><br><span class="line">    Class isa;//8个字节</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//实例化一个Student对象，查看其占用的内存大小</span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        Student *stu = [[Student alloc] init];</span><br><span class="line">        stu-&gt;_grade = 3;</span><br><span class="line">        stu-&gt;_age = 5;</span><br><span class="line">        </span><br><span class="line">        NSLog(@&quot;%zd&quot;, class_getInstanceSize([Student class]));</span><br><span class="line">        // &gt;&gt;这里打印出来的结果是 16</span><br><span class="line">        </span><br><span class="line">        NSLog(@&quot;%zd&quot;, malloc_size((__bridge const void *)stu));</span><br><span class="line">        // &gt;&gt;这里打印出来的结果是 16</span><br><span class="line">        </span><br><span class="line">        //用这个方法可以证明stu其实就是`Student_IMPL`这个结构体</span><br><span class="line">        //下方面打印出来的结果跟上面赋值的结果一致</span><br><span class="line">        struct Student_IMPL *stuImpl = (__bridge struct Student_IMPL *)stu;</span><br><span class="line">        NSLog(@&quot;grade is %d, age is %d&quot;, stuImpl-&gt;_grade, stuImpl-&gt;_age);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>从NSObject源码分析：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// objc-runtime-new.h</span></span><br><span class="line"><span class="comment">/* NSObject在调用alloc初始化的时候，底层是调用：</span></span><br><span class="line"><span class="comment"> * _objc_rootAllocWithZone() &gt; class_createInstance() &gt; calloc(size_t, size_t)</span></span><br><span class="line"><span class="comment"> * class_createInstance() 最终会调用如下方法来分配内存</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">size_t</span> instanceSize(<span class="keyword">size_t</span> extraBytes) &#123;</span><br><span class="line">        <span class="keyword">size_t</span> size = alignedInstanceSize() + extraBytes;</span><br><span class="line">        <span class="comment">// CF requires all objects be at least 16 bytes.</span></span><br><span class="line">     	<span class="comment">// 所有CF对象都必须最少16个字节</span></span><br><span class="line">        <span class="keyword">if</span> (size &lt; <span class="number">16</span>) size = <span class="number">16</span>;</span><br><span class="line">        <span class="keyword">return</span> size;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5><span id="结论">结论：</span></h5>
+<ol>
+<li>系统分配了16个字节给NSObject对象(通过<code>malloc_size()</code>函数获得对应对象所指向内存中的大小)</li>
+<li>在64bit环境下，NSObject对象内部只使用了8个字节的空间(通过<code>class_getInstanceSize()</code>函数获得实例对象的大小)，还有8个字节是预留的；</li>
+<li>如果结构体大小小于16个字节时，底层会最小按16来分配，超过16个字节后， 结构体的大小必须是最大成员大小的倍数(如Student结构体中最大为8，如Student超过16后，则会按8的倍数去分配)；</li>
+<li>但在最终分配大小的时候iOS系统做了内存分配的优化，及内存对齐机制，注意这里所说的内存对齐不是指结构体的那个内存对齐，最终分配给结构体的大小为16的倍数(可以从苹果的libmalloc源码中查看，如下图)；</li>
+<li>整体逻辑跟iOS本身的内存对齐机制、及运行机制有关；<br>
+<img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/NSObject_libmalloc1.png" alt=""><br>
+<img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/NSObject_libmalloc2.png" alt=""><br>
+<img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/NSObject_libmalloc3.png" alt=""></li>
+</ol>
+</blockquote>
+<h6><span id="其它查看内存大小的方式">其它查看内存大小的方式</span></h6>
+<blockquote>
+<ol>
+<li>通过xcode的工具来辅助性的查看：Xcode &gt; Debug &gt; Debug Workflew &gt; View Memory &gt; 然后在内存地址栏中输入你要查询的内存地址；</li>
+<li>通过LLDB命令来打印内存地址：<code>(lldb) memory read 0x10331a920</code> 也可以简写成：<code>x 0x10331a920</code>;</li>
+<li>指定的格式来打印内存地址：<code>(lldb) x/3xg 0x10331a920</code>，命令释义：以0x10331a920这个内存地址去读取3串内存地址，每串8个字节数以16进制的格式打印；</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> (lldb) memory <span class="built_in">read</span>/数量+格式+字节数  内存地址</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> (lldb) x/数量+格式+字节数  内存地址</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> 数量：你想读取的个数</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> 格式：x是16进制，f是浮点，d是10进制</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> 字节数：</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> b：byte 1字节，h：half word 2字节</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> w：word 4字节，g：giant word 8字节</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/NSObject_lldb_cmd.png" alt=""></p>
+<h6><span id="写内存">写内存</span></h6>
+<blockquote>
+<p>写内存：<code>(lldb) memory write 0x10331a928 9</code><br>
+释义：改<code>0x10331a920</code>内存起的第28个字节为9，如下图</p>
+</blockquote>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/NSObject_memory_write.png" alt=""></p>
+<p>注意点：</p>
+<blockquote>
+<p>sizeof( )它是个运算符，不是函数，在编译的时候就确定，编译之后就是个常量，如：</p>
+<p>Student *stu = [[Student alloc] init];</p>
+<p>NSLog(@&quot;%zd&quot;,sizeof( stu )); 打印出来并不是stu占用多少空间，而是*stu这个指针占用的内存空间，结果：8；</p>
+<p><code>class_getInstanceSize()</code>函数返回的仅仅是对象需要占用的内存大小，并非最终系统分配的内存大小。</p>
+</blockquote>
+<h3><span id="相关问题二对象的isa指针指向哪里">相关问题二：对象的isa指针指向哪里？</span></h3>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816214104.png" alt=""></p>
+<h3><span id="相关问题三oc的类信息存放在哪里">相关问题三：OC的类信息存放在哪里？</span></h3>
+<p>实例对象里面只存放成员变量，方法不是放在实例对象里的，因为同一类可能实例化成多个对象，但会有相同的方法，这样就只需要创建一份方法，不必须每个实例对象各存一份，每个实例对象里面只存放自已特有的东西。</p>
 
                 
 
@@ -258,12 +307,12 @@ Peace!</p>
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2018/08/29/Mac开机一直卡在进度条界面/" data-toggle="tooltip" data-placement="top" title="Mac开机一直卡在进度条界面">&larr; Previous Post</a>
+                            <a href="/2018/08/17/KVC实现原理/" data-toggle="tooltip" data-placement="top" title="KVC实现原理">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2018/08/17/NSObject的本质/" data-toggle="tooltip" data-placement="top" title="NSObject的本质">Next Post &rarr;</a>
+                            <a href="/2018/08/17/KVO实现原理/" data-toggle="tooltip" data-placement="top" title="KVO的实现原理">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -287,17 +336,6 @@ Peace!</p>
             
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
-
-    
-      <aside id="sidebar">
-        <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
-        
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">常见的API有</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">set时的查找顺序：</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number"></span> <span class="toc-nav-text">get时的查找顺序</span></a>
-        
-        </div>
-      </aside>
-    
 
                 
             <!-- Sidebar Container -->
@@ -335,8 +373,8 @@ Peace!</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/KVC实现原理/";
-    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/KVC实现原理/";
+    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/NSObject的本质/";
+    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/NSObject的本质/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
