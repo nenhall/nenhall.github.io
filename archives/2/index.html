@@ -150,14 +150,14 @@
 
                         
                         <li>
-                            <a href="/photograph/">Photograph</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/photograph/">Photograph</a>
                         </li>
                         
                     
@@ -220,27 +220,20 @@
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/OC对象分类/">
+    <a href="/2018/08/17/KVC实现原理/">
         <h2 class="post-title">
-            OC对象分类
+            KVC实现原理
         </h2>
         <h3 class="post-subtitle">
-            
+            KVC的底层实现原理解析
         </h3>
         <div class="post-content-preview">
-            OC对象分类
+            KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性
+常见的API有
 
-OC对象分类：instance对象(实例对象)、class对象(类对象)、meta-class对象(元类对象)；
-
-instance对象
-**定义：**通过类alloc出来的对象，就是instance对象，每次调用alloc都会产生新的instance对象；
-instance对象在内存中存储的信息包括：
-
-isa指针；
-其它成员变量；
-
-class对象
-注意：每个类对象在内存......
+- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
+- (void)setValue:(id)value forKey:(NSString *)key;
+- (id)valueForKeyPath:(NSStr......
         </div>
     </a>
     
@@ -262,20 +255,17 @@ class对象
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/KVC实现原理/">
+    <a href="/2018/08/17/KVO实现原理/">
         <h2 class="post-title">
-            KVC实现原理
+            KVO的实现原理
         </h2>
         <h3 class="post-subtitle">
-            KVC的底层实现原理解析
+            
         </h3>
         <div class="post-content-preview">
-            KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性
-常见的API有
-
-- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
-- (void)setValue:(id)value forKey:(NSString *)key;
-- (id)valueForKeyPath:(NSStr......
+            Key Value Observe
+基本使用：
+1234567891011121314151617@implementation ViewController- (void)viewDidLoad &#123;[super viewDidLoad];self.person1 = [[Person alloc] init];self.person2 = [[Person alloc] init......
         </div>
     </a>
     
@@ -340,6 +330,8 @@ class对象
         
             
             <a href="/tags/#生活随笔" title="生活随笔" rel="5">生活随笔</a>
+            
+        
             
         
     </div>
