@@ -150,14 +150,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/photograph/">Photograph</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/photograph/">Photograph</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -228,7 +228,8 @@
             一路向西
         </h3>
         <div class="post-content-preview">
-            ​        那天一个小心，从朋友那听说将要进行川藏之旅，之前因为时间的关系一直没去成，这一次不顾一切；西藏是我一直向往的地方，在我的心中是一块神圣土地，是不可替代的，那里有蔚蓝、安静的天空、纯朴的人民；我曾想第一次去西藏一定要带我所爱之人一起去，但所爱之人()，有些事还得去做，就类似那首歌里面唱的一样：“一个人完成两个人的梦想”；虽然说藏民发生几次暴乱，但我觉得不能跟这个混为一体来评判......
+            ​        那天一个小心，从朋友那听说将要进行川藏之旅，之前因为时间的关系一直没去成，这一次不顾一切；西藏是我一直向往的地方，在我的心中是一块神圣土地，是不可替代的，那里有蔚蓝、安静的天空、纯朴的人民；我曾想第一次去西藏一定要带我所爱之人一起去，但所爱之人( )，有些事还得去做，就类似那首歌里面唱的一样：“一个人完成两个人的梦想”；好了，言归正传吧！
+​        我们是从成都出发......
         </div>
     </a>
     
@@ -523,26 +524,20 @@ class对象
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/NSObject的本质/">
+    <a href="/2018/08/17/KVC实现原理/">
         <h2 class="post-title">
-            NSObject的本质
+            KVC实现原理
         </h2>
         <h3 class="post-subtitle">
-            
+            KVC的底层实现原理解析
         </h3>
         <div class="post-content-preview">
-            NSObject的编译过程：
+            KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性
+常见的API有
 
-
-我们平时编写的oc代码，底层实现其实都是C/C++代码：
-Objective-C &gt; C/C++ &gt; 汇编语言 &gt; 机器语言代码
-Objective-C对象主要是基于C/C++的结构体来实现的.
-
-
-OC代码转成C++代码：
-我们需要借助转换后的代码来分析
-
-终端命令：xcrun -sdk iphoneos clang -arch arm6......
+- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
+- (void)setValue:(id)value forKey:(NSString *)key;
+- (id)valueForKeyPath:(NSStr......
         </div>
     </a>
     
@@ -598,6 +593,8 @@ OC代码转成C++代码：
     <div class="tags">
         
             
+        
+            
             <a href="/tags/#底层原理" title="底层原理" rel="4">底层原理</a>
             
         
@@ -607,8 +604,6 @@ OC代码转成C++代码：
         
             
             <a href="/tags/#生活随笔" title="生活随笔" rel="5">生活随笔</a>
-            
-        
             
         
     </div>
