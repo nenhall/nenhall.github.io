@@ -220,20 +220,26 @@
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/KVC实现原理/">
+    <a href="/2018/08/17/NSObject的本质/">
         <h2 class="post-title">
-            KVC实现原理
+            NSObject的本质
         </h2>
         <h3 class="post-subtitle">
-            KVC的底层实现原理解析
+            
         </h3>
         <div class="post-content-preview">
-            KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性
-常见的API有
+            NSObject的编译过程：
 
-- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
-- (void)setValue:(id)value forKey:(NSString *)key;
-- (id)valueForKeyPath:(NSStr......
+
+我们平时编写的oc代码，底层实现其实都是C/C++代码：
+Objective-C &gt; C/C++ &gt; 汇编语言 &gt; 机器语言代码
+Objective-C对象主要是基于C/C++的结构体来实现的.
+
+
+OC代码转成C++代码：
+我们需要借助转换后的代码来分析
+
+终端命令：xcrun -sdk iphoneos clang -arch arm6......
         </div>
     </a>
     
@@ -255,17 +261,20 @@
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/KVO实现原理/">
+    <a href="/2018/08/17/KVC实现原理/">
         <h2 class="post-title">
-            KVO的实现原理
+            KVC实现原理
         </h2>
         <h3 class="post-subtitle">
-            
+            KVC的底层实现原理解析
         </h3>
         <div class="post-content-preview">
-            Key Value Observe
-基本使用：
-1234567891011121314151617@implementation ViewController- (void)viewDidLoad &#123;[super viewDidLoad];self.person1 = [[Person alloc] init];self.person2 = [[Person alloc] init......
+            KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性
+常见的API有
+
+- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
+- (void)setValue:(id)value forKey:(NSString *)key;
+- (id)valueForKeyPath:(NSStr......
         </div>
     </a>
     
@@ -321,13 +330,13 @@
     <div class="tags">
         
             
-        
-            
             <a href="/tags/#底层原理" title="底层原理" rel="4">底层原理</a>
             
         
             
             <a href="/tags/#Objective-C" title="Objective-C" rel="4">Objective-C</a>
+            
+        
             
         
             
