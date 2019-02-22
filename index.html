@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          nenhall | 小浩浩工作室
+        
+    </title>
+
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/homebg.png') 
+            /*config*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="site-heading">
+                        <h1>nenhall.blog</h1>
+                        <!--<hr class="small">-->
+                        <span class="subheading">nenhall.blog</span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">nenhall.blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/photograph/">Photograph</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Main Content -->
+<div class="container">
+    <div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
+            
+                <!-- Main Content -->
+
+
+<div class="post-preview">
+
+    <a href="/2019/02/22/Nodejs-入门篇/">
+        <h2 class="post-title">
+            Nodejs 入门篇
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            Node.js 学习笔记
+[TOC]
+前言
+
+本书首先简要介绍 Node.js，然后通过示例讲解 Node.js 的基本特性，再用案例式教学的方式讲述 如何用 Node.js 进行 Web 开发，接着探讨一些 Node.js 进阶话题，最后展示如何将一个 Node.js 应用部署到 生产环境中。
+
+简介
+
+本书共6章，分别讨论了 Node.js的背景、安装和配置方法、基本特性、核心模块以及一......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2019-02-22
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#基础版" title="基础版">基础版</a>
+            
+              <a href="/tags/#Node.js" title="Node.js">Node.js</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/02/22/iOS-Block本质/">
+        <h2 class="post-title">
+            iOS-Block本质
+        </h2>
+        <h3 class="post-subtitle">
+            Block本质解剖
+        </h3>
+        <div class="post-content-preview">
+            iOS-Block本质
+本质：
+
+
+block本质上也是一个OC对象，它内部也有个isa指针
+
+
+block是封装了函数调用以及函数调用环境的OC对象
+
+
+block的底层结构如下图二所示
+
+
+
+底层数据结构(底层代码分析)：
+
+
+block底层是一个**__main_block_impl_0这样一个结构体，结构体的第一个成员又是一个结构体__block_impl**，这个结构体里面有个is......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2019-02-22
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#底层原理" title="底层原理">底层原理</a>
+            
+              <a href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/02/22/Runtime/">
+        <h2 class="post-title">
+            Runtime
+        </h2>
+        <h3 class="post-subtitle">
+            __forwarding_ 底层实现解剖
+        </h3>
+        <div class="post-content-preview">
+            runtime
+
+什么是Runtime？平时项目中有用过么？
+
+OC是一门动态性比较强的编程语言，允许很多操作推迟到程序运行时再进行
+OC的动态性就是由Runtime来支撑和实现的，Runtime是一套C语言的API，封装了很多动态性相关的函数
+平时编写的OC代码，底层都是转换成了Runtime API进行调用
+
+
+具体应用
+
+利用关联对象（AssociatedObject）给分类添加属性
+......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2019-02-22
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#底层原理" title="底层原理">底层原理</a>
+            
+              <a href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/02/22/iOS-Category/">
+        <h2 class="post-title">
+            iOS-Category
+        </h2>
+        <h3 class="post-subtitle">
+            iOS-Category
+        </h3>
+        <div class="post-content-preview">
+            Category
+扩展里面的方法存放
+
+对象方法：不管写了多少个分类，分类里面写了多少对象方法，最终(注意)都是存放在唯一的一个类对象里面，调用的时候都是通过instance的isa指针去(class)那里面找。
+类方法：不管写了多少个分类，分类里面写了多少类方法，最终都是存放在唯一的一个元类(meta-class)里面，调用的时候都是通过class的isa指针去(meta-class)那里......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2019-02-22
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#底层原理" title="底层原理">底层原理</a>
+            
+              <a href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/09/22/1677ziyouxing/">
+        <h2 class="post-title">
+            穿越318线川藏游记
+        </h2>
+        <h3 class="post-subtitle">
+            一路向西
+        </h3>
+        <div class="post-content-preview">
+            ​        那天一个小心，从朋友那听说将要进行川藏之旅，之前因为时间的关系一直没去成，这一次不顾一切；西藏是我一直向往的地方，在我的心中是一块神圣土地，是不可替代的，那里有蔚蓝、安静的天空、纯朴的人民；我曾想第一次去西藏一定要带我所爱之人一起去，但所爱之人( )，有些事还得去做，就类似那首歌里面唱的一样：“一个人完成两个人的梦想”；好了，言归正传吧！
+​        我们是从成都出发......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2018-09-22
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#游记" title="游记">游记</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/08/29/最后一支烟/">
+        <h2 class="post-title">
+            最后一支烟
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            再美的文字也及不过,你的一句的安慰；
+再漂亮的花朵,也不及你甜蜜的笑容；
+再寒冷的冬天,但却怎么也冻结不了你温暖的拥抱；
+今生最大的收获,不是我得到多少名或利,而是让我遇见了你；
+都希望时光倒流,我却不希望,因为我害怕时光倒流了我们就不能相遇；
+最大的幸福不是我永恒的拥有多少,而是能与你厮守终生；
+最伤心的事莫过于,看着自己心爱的人受委屈却给不了半点安慰；
+最遥远的距离莫过于,天涯海角而是我......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2018-08-29
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#生活随笔" title="生活随笔">生活随笔</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/08/29/第十九支烟/">
+        <h2 class="post-title">
+            第十九支烟
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            坐在电脑前发呆,却怎么也写不清对生活的对白
+蓦然回首才发现时间过得很快
+不知不觉就在这混了一年多了
+不知不觉中发现认识你、认识你们已经很久了；
+其中有我想过的不想过的生活，它都还是过去了
+甚至没有留下任何证据给我,让我记得曾经做过什么,唯一的是让岁月留给下感伤,
+或许是失败时的落寞,
+或许是成功时站在高处的寒冷,
+或许是寂寞时的失落
+或是某一个缺少勇气的遗憾
+每一件事情，你认为TA是怎么样的......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2018-08-29
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#生活随笔" title="生活随笔">生活随笔</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/08/29/《这一年》滔滔逝水，急急流年/">
+        <h2 class="post-title">
+            《这一年》滔滔逝水，急急流年
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            滔滔逝水，急急流年，几几个这一年弹指飞过，回首前尘，恍如一梦。
+这一年我们很小，我们有很多的差不多年龄的人一起无忧无虑的玩耍，再是一起在乡村上小学一直到上初中都可以不分开，
+这一年我们初中毕业，也是我们的一过分离点或许此时的我们还会考入同一学校，这一年的年尾我们都会回家，相隔半年的我们可以相聚，一起诉说自己第一次走出自己家乡的感觉、更有说不玩的趣事，待过年后正月初，又各奔西东.
+这一年手机或......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2018-08-29
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#生活随笔" title="生活随笔">生活随笔</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/08/29/iOS-armv7-armv7s-arm64区别与应用32位、64位配置/">
+        <h2 class="post-title">
+            iOS armv7, armv7s, arm64区别与应用32位、64位配置
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            iOS armv7, armv7s, arm64区别与应用32位、64位配置
+历程
+
+2015年2月1日不允许不支持arm64的应用的提交；
+iOS10发布后，如果你的应用中使用到了32位的类、库，没有相应支持64位机型的库，则首次启动后会弹窗式提示：“ xxx可能使iPhone变慢…”；
+iOS10.3公测版发布:封杀32位应用；
+苹果系统（iOS7/iOS8-iOS9）,32位的fram......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2018-08-29
+        </p>
+        <div class="tags">
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/08/29/幽暗的岁月-自由的囚徒/">
+        <h2 class="post-title">
+            幽暗的岁月 自由的囚徒
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            幽暗的岁月  自由的囚徒
+岁月…，无处安放蒙尘的心。
+尘世烟花，太过绚丽，我本是尘埃，不愿刹那凋零。
+也许，岁月的尽头，阳光明媚，温暖永远；而世间，人情太冷，又何必苦苦寻觅一心一意的真！
+我故作潇洒，可最后却挣脱不了岁月的束缚。
+我开始相信，我是自由的囚徒，只是我不懂岁月给我的那些幽暗的日夜罢了。
+时常心情郁结：总是走不出岁月的故事设定，那些脱离不了世俗的情节，总是在七情六欲中-翻来覆去。于......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2018-08-29
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#生活随笔" title="生活随笔">生活随笔</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    
+        <li class="next">
+            <a href="/archives/2/">Older Posts &rarr;</a>
+        </li>
+    
+</ul>
+
+
+
+                <!-- 如果开启评论功能 -->
+                
+            </div>
+
+          <!-- Sidebar Container -->
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+        <!-- Featured Tags -->
+
+<section>
+    <!-- no hr -->
+    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+    <div class="tags">
+        
+            
+            <a href="/tags/#底层原理" title="底层原理" rel="7">底层原理</a>
+            
+        
+            
+            <a href="/tags/#Objective-C" title="Objective-C" rel="7">Objective-C</a>
+            
+        
+            
+            <a href="/tags/#生活随笔" title="生活随笔" rel="5">生活随笔</a>
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+</section>
+
+        <hr>
+    
+        <!-- Short About -->
+<section class="visible-md visible-lg">
+    <h5><a href="/about/">ABOUT ME</a></h5>
+    <div class="short-about">
+
+        
+            <img id="avatar_pic" src="/img/ironman-draw.png">
+        
+
+        
+            <p>Hi, i&#39;m nenhall</p>
+        
+
+        <!-- SNS Link -->
+        <ul class="list-inline">
+            
+            
+                <li>
+                    <a target="_blank" href="https://twitter.com/being_sun_">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+            
+                <li>
+                    <a target="_blank" href="https://www.zhihu.com/people/nenhall">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa  fa-stack-1x fa-inverse">知</i>
+                        </span>
+                    </a>
+                </li>
+            
+
+            
+                <li>
+                    <a target="_blank" href="http://weibo.com/3108755861">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+            
+                <li>
+                    <a target="_blank" href="https://www.facebook.com/nenhall">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+            
+                <li>
+                    <a target="_blank" href="https://github.com/nenhall">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+            
+            
+            
+        </ul>
+    </div>
+</section>
+        <hr>
+    
+        
+  <h5>RECENT POSTS
+  <div class="widget">
+    <ul>
+      
+        <li>
+          <a href="/2019/02/22/Nodejs-入门篇/">Nodejs 入门篇</a>
+        </li>
+      
+        <li>
+          <a href="/2019/02/22/iOS-Block本质/">iOS-Block本质</a>
+        </li>
+      
+        <li>
+          <a href="/2019/02/22/Runtime/">Runtime</a>
+        </li>
+      
+        <li>
+          <a href="/2019/02/22/iOS-Category/">iOS-Category</a>
+        </li>
+      
+        <li>
+          <a href="/2018/09/22/1677ziyouxing/">穿越318线川藏游记</a>
+        </li>
+      
+    </ul>
+  </div>
+</h5>
+        <hr>
+    
+        <!-- Friends Blog -->
+
+        <hr>
+    
+</div>
+
+        
+    </div>
+</div>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/being_sun_">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3108755861">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; nenhall 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.jianshu.com/u/51ba9ff4be5b/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://www.jianshu.com/u/51ba9ff4be5b/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
