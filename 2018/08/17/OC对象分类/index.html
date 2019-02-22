@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          OC对象分类 - nenhall | 小浩浩工作室
+        
+    </title>
+
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/OC对象分类/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('undefined')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
+                            
+                              <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+                            
+                        </div>
+                        <h1>OC对象分类</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by nenhall on
+                            2018-08-17
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">nenhall.blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/photograph/">Photograph</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>OC对象分类</p>
+<blockquote>
+<p>OC对象分类：instance对象(实例对象)、class对象(类对象)、meta-class对象(元类对象)；</p>
+</blockquote>
+<h3><span id="instance对象">instance对象</span></h3>
+<p>**定义：**通过类alloc出来的对象，就是instance对象，每次调用alloc都会产生新的instance对象；<br>
+<strong>instance对象在内存中存储的信息包括：</strong></p>
+<ol>
+<li>isa指针；</li>
+<li>其它成员变量；</li>
+</ol>
+<h3><span id="class对象">class对象</span></h3>
+<p>注意：每个类对象在内存中都是唯一的(只有一份)，每个类只有一个元类</p>
+<p>获取类对象：[obj class]、object_getClass(obj);</p>
+<p><strong>class对象在内存中存储的信息包括：</strong></p>
+<blockquote>
+<p>meta-class对象和class对象的内存结构是一样的，但是用途不一样，在内存中包括的信息主要如下：</p>
+</blockquote>
+<ol>
+<li>ias指针；</li>
+<li>superclass指针；</li>
+<li>类的属性信息(@property)、类的对象方法信息(instance method)</li>
+<li>类的协议信息(protocol)、类的成员变量信息(ivar)。</li>
+<li>类方法也是放在元类里面的；</li>
+</ol>
+<h3><span id="meta-class对象">meta-class对象</span></h3>
+<p>获得元类对象：</p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//将类对象当做参数传入，获得元类对象：</span></span><br><span class="line">Class metaClass = <span class="keyword">object</span><span class="number">_</span>getClass([NSObject <span class="keyword">class</span>]);</span><br></pre></td></tr></table></figure>
+<p>判定一个对象是不是元类：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class_isMetaClass(<span class="name">obj</span>)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p><strong>获取类对象、元类对象的三个方法的区别：</strong></p>
+<ol>
+<li>
+<p>object_getClass([NSObject class]);</p>
+<ol>
+<li>传入字符串类名，返因对应的类对象；</li>
+</ol>
+</li>
+<li>
+<p>object_getClass(obj)</p>
+<ol>
+<li>传入的obj可能是instance对象，class对象、meta-class对象；</li>
+<li>返回：
+<ul>
+<li>如果传的是instance对象，返回class对象；</li>
+<li>如果传的是class对象，返回meta-class对象；</li>
+<li>如果传的是meta-class对象，返回的是NSObject(基类)的meta-class对象；</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>-(Class)class 、+(Class)class<br>
+返回的就是类对象</p>
+</li>
+</ol>
+<h3><span id="isa指针存放那些信息">isa指针：存放那些信息？</span></h3>
+<ol>
+<li>
+<p>实例对象(instance)：</p>
+<p>isa、其它成员变量；</p>
+</li>
+<li>
+<p>类对象(class)：</p>
+<p>isa、superclass、属性、对象方法、协议、成员变量；</p>
+</li>
+<li>
+<p>meta-class：</p>
+<p>isa、superclass、类方法</p>
+</li>
+</ol>
+<p>**instance的isa指向class(类对象)：**当调用对象方法时，通过instance的isa找到class，最后找到对象的方法实现进行调用；</p>
+<p>**class的isa指向meta-class：<strong>当调用类方法时，通过class的isa找到meta-class，最后找到类方法的实现进行调用；</strong></p>
+<p><strong>meta-class的isa指向基类有meta-class</strong></p>
+<p><strong>class的superclass指向父类的class，如果没有父类，superclass指针为nil；</strong></p>
+<p><strong>meta-class的superclass指向的是父类的meta-class</strong></p>
+<p>**注意：**由于NSObject没有superclass，但也不是为空，而是：基类的meta-class对象的superclass指向的是基类的class(类对象)(如下图三)，</p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180731212009.png" alt=""></p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180731212009.png" alt=""></p>
+<p><img src="http://pbflin9sq.bkt.clouddn.com/20180801204622.png" alt=""></p>
+<p>按上面的流程，举个例分析说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Student *stu = [[Student alloc] init];</span><br><span class="line">[stu test];//调用对象方法</span><br><span class="line">[stu classTest];//调用类方法</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>stu调用<code>test</code>的调用流程：首先test是对象方法，而对象方法是放在class里面，<br>
+流程：通过stu通过自己的isa找到他自己的class，在class对象中找test方法，如果有就展开调用,如果没有class通过isa去superclass的里面找(一层层的往上找，直到继承关系走完)，如果还没有，superclass通过自己的isa去meta-class里面找，最后走到NSObject，如果还是没有找到就会报错：&quot;unreconized selector sent to instance&quot;<br>
+注意：如果在调用类方法<code>classTest</code>，因找不到方法崩溃之前，其实还有最后一步流程，也是我们一般没注意的地方，在基类的meta-class对象找不到<code>classTest</code>方法时，它还会去基类的类对象里面找(即上图右上角转角那个箭头)，如果则调用，否则才报错。</p>
+<p>可能你觉得很奇怪，meta-class里面存放的是类方法，类里面存放的是对象方法，为什么meta-class类对象里面找不到方法时会找到类的对象方法里面去？具体这个根runtime机制有关，后面有时间我会写runtime相关的问题；</p>
+</blockquote>
+<p>可以进行如下测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">@implementation NSObject (Test)</span><br><span class="line">+ (void)test &#123;</span><br><span class="line">    NSLog(@&quot;+[NSObject test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)test &#123;</span><br><span class="line">    NSLog(@&quot;-[NSObject test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// Person</span><br><span class="line">@interface Person : NSObject</span><br><span class="line"></span><br><span class="line">- (void)test;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line">- (void)test &#123;</span><br><span class="line">    NSLog(@&quot;+[Person test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSLog(@&quot;[Person class] - %p&quot;, [Person class]);</span><br><span class="line">        NSLog(@&quot;[NSObject class] - %p&quot;, [NSObject class]);</span><br><span class="line">        [Person test];</span><br><span class="line">        [NSObject test];</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面我们在NSObject类扩展中申明和实现了一个实例方法，调用的时候调用的是类方法，但你会神奇的发现不会崩溃，而且调用者分别是Person、NSObject；其实就是我们上面所说到的<strong>在基类的meta-class对象找不到<code>test</code>方法时，它还会去基类的类对象里面找</strong>.</p>
+<h3><span id="结论">结论：</span></h3>
+<h4><span id="对象的isa指针指向哪里">对象的isa指针指向哪里？</span></h4>
+<ul>
+<li><strong>instance对象的isa指向class对象；</strong></li>
+<li><strong>class对象的isa指向meta-class对象；</strong></li>
+<li><strong>meta-class对象的isa指向基类的meta-class对象</strong></li>
+</ul>
+<h4><span id="oc的类信息存放在哪里">OC的类信息存放在哪里？</span></h4>
+<ul>
+<li>**对象方法、属性、成员变量、协议信息，存放在class对象中；</li>
+<li><strong>类方法，存放在meta-class对象中；</strong></li>
+<li><strong>成员变量的具体值，存放在instance对象；</strong></li>
+</ul>
+<h4><span id="窥探struct-objc_class结构体">窥探struct objc_class结构体</span></h4>
+<p>从objc_runtime源码得到如下结构图：</p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180801223018.png" alt=""></p>
+<p>已经编译好一个从objc_runtime源码抽出来工程，可以清楚看到objc_class的内部结构：</p>
+<p>代码地址：<a href="https://github.com/nenhall/struct-objc_class" target="_blank" rel="noopener">窥struct objc_class结构体</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/08/17/NSObject的本质/" data-toggle="tooltip" data-placement="top" title="NSObject的本质">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/08/17/KVC实现原理/" data-toggle="tooltip" data-placement="top" title="KVC实现原理">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
+                        
+                          <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/OC对象分类/";
+    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2018/08/17/OC对象分类/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/being_sun_">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3108755861">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; nenhall 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.jianshu.com/u/51ba9ff4be5b/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://www.jianshu.com/u/51ba9ff4be5b/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

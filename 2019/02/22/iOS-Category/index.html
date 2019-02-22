@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          iOS-Category - nenhall | 小浩浩工作室
+        
+    </title>
+
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/iOS-Category/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('note_head_img.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
+                            
+                              <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+                            
+                        </div>
+                        <h1>iOS-Category</h1>
+                        <h2 class="subheading">iOS-Category</h2>
+                        <span class="meta">
+                            Posted by nenhall on
+                            2019-02-22
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">nenhall.blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/photograph/">Photograph</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2><span id="category">Category</span></h2>
+<h3><span id="扩展里面的方法存放">扩展里面的方法存放</span></h3>
+<ul>
+<li>对象方法：不管写了多少个分类，分类里面写了多少对象方法，最终(注意)都是存放在唯一的一个类对象里面，调用的时候都是通过instance的isa指针去(class)那里面找。</li>
+<li>类方法：不管写了多少个分类，分类里面写了多少类方法，最终都是存放在唯一的一个元类(meta-class)里面，调用的时候都是通过class的isa指针去(meta-class)那里面找。</li>
+</ul>
+<p><img src="/Users/nenhall/Desktop/iOS-Category.png" alt=""></p>
+<ul>
+<li>
+<p>最终通过runtime动态将分类的方法合并到类对象、元类对象中，并不是在编译的时候合并的；</p>
+<blockquote>
+<p>分类在编译完后，其实是转成了如下结构体，把结构体的信息存放在这个结构体下，并申明了一个_category_t的成员变量，并进行赋值：</p>
+</blockquote>
+</li>
+</ul>
+<p>通过代码进行证明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person+Test.h&quot;</span><br><span class="line">@implementation Person (Test)</span><br><span class="line">- (void)run &#123; NSLog(@&quot;Person (Test) - run&quot;); &#125;</span><br><span class="line"></span><br><span class="line">- (void)test &#123; NSLog(@&quot;test&quot;); &#125;</span><br><span class="line"></span><br><span class="line">+ (void)test2 &#123;  &#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>通过clang将其转c++代码查看，如下图1，可以看到，有一个大的结构体：<code>_category_t</code>，大的结构体内又包含了好多结构体，每个结构体里面存放着不同的属性：类基本信息、实例方法、类方法、遵守的协议列表、属性列表。</p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816221520.png" alt=""></p>
+<p>再看看结构体赋值，是一一对应赋值的：<br>
+如果有多个分类，它生成的结构体名字都是<code>_category_t</code>，只不过后面的名字不一样：<code>_OBJC_$_CATEGORY_Person_$_Test</code><br>
+<img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816222138.png" alt=""></p>
+<h3><span id="category的实现原理">Category的实现原理：</span></h3>
+<ol>
+<li>Category编译之后的底层结构是struct category_t，里面存储着分类的对象方法、类方法、属性、协议信息；</li>
+<li>在程序运行的时候，runtime会将Category的数据，合并到类信息中(类对象、元类对象)；</li>
+</ol>
+<h3><span id="category和class-extension的区别">Category和Class Extension的区别</span></h3>
+<ol>
+<li>Class Extension在编译的时候，它的数据就已经包含在类信息中；</li>
+<li>Category是在运行时，才会将数据合并到类信息中；</li>
+</ol>
+<h3><span id="category的加载过程">Category的加载过程</span></h3>
+<ol>
+<li>通过Runtime加载某个类的所有Category数据</li>
+<li>把所有Category的方法、属性、协议数据，合并到一个大数组中
+<ul>
+<li>后面参与编译的Category数据，会在数组的前面</li>
+</ul>
+</li>
+<li>将合并后的分类数据（方法、属性、协议），插入到类原来数据的前面</li>
+</ol>
+<p><strong>源码解读顺序，按以下顺序阅读源码可能更容易懂：</strong></p>
+<ul>
+<li><a href="http://objc-os.mm" target="_blank" rel="noopener">objc-os.mm</a>
+<ul>
+<li>_objc_init</li>
+<li>map_images</li>
+<li>map_images_nolock</li>
+</ul>
+</li>
+<li><a href="http://objc-runtime-new.mm" target="_blank" rel="noopener">objc-runtime-new.mm</a>
+<ul>
+<li>_read_images</li>
+<li>remethodizeClass</li>
+<li>attachCategories</li>
+<li>attachLists</li>
+<li>realloc、memmove、 memcpy</li>
+</ul>
+</li>
+</ul>
+<h3><span id="voidload为什么里不会覆盖">+(void)load为什么里不会覆盖？</span></h3>
+<ul>
+<li>去runtime的源码里面看，有如下函数：</li>
+<li>系统会自动先加载类的<code>+(void)load</code>方法，然后再加载分类的<code>+(void)load</code>方法，而且都是直接通过内存地址直接加载的，与加载正常方法不一样，正常我们执行一个方法是：去类或者元类里面找，找到然后通过<strong>消息机制</strong>进行调用，这里则不是使用<strong>消息机制</strong>。</li>
+<li><code>+(void)load</code>方法是先编译的类，就会先调用，不管是在类还是分类中的<code>+(void)load</code>方法；但在分类中的对于我们自己定义的方法，加载顺序则相反：当类和分类都实现了同一个方法时，我们调用对应方法时，执行的是分类里面的方法；因为如前面所说分类的方法会在程序运行时合并到类信息内，越往后加载的分类，分类的信息存放在越前面，调用时依次查找，找到后就不再往后查找。</li>
+</ul>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20181010213330.png" alt=""></p>
+<ul>
+<li>假如存在继承的时候，会优先调用父类的<code>+(void)load</code>方法，而且每个类的<code>+(void)load</code>只会调用一次，源码的实现如下：</li>
+</ul>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20181010215509.png" alt=""></p>
+<h3><span id="voidload方法什么时候调用总结">+(void)load方法什么时候调用(总结)：</span></h3>
+<ul>
+<li>runtime加载类、分类的时候调用，即使你还没有初始化那有类，也会调用；</li>
+<li>每个类、分类的+load方法，在程序运行过程中只调用一次</li>
+</ul>
+<p><strong>调用顺序：</strong></p>
+<ul>
+<li>
+<p>先调用类的+load</p>
+<ul>
+<li>按照编译先后顺序调用（先编译，先调用）</li>
+<li>调用子类的+load之前会先调用父类的+load</li>
+</ul>
+</li>
+<li>
+<p>再调用分类的+load</p>
+<ul>
+<li>按照编译先后顺序调用（先编译，先调用）</li>
+</ul>
+</li>
+<li>
+<p>+(void)load方法可以继承，但一般不会这么做，因为这个方法都是由系统主动调用的，我们主动调用时其实就相当于使用了<code>objc_msgSend()</code>消息机制，发送了一个消息。</p>
+</li>
+</ul>
+<h4><span id="objc4源码解读过程objc-osmm">objc4源码解读过程：</span></h4>
+<ul>
+<li>_objc_init</li>
+<li>load_images</li>
+<li>prepare_load_methods
+<ul>
+<li>schedule_class_load</li>
+<li>add_class_to_loadable_list</li>
+<li>add_category_to_loadable_list</li>
+</ul>
+</li>
+<li>call_load_methods
+<ul>
+<li>call_class_loads</li>
+<li>call_category_loads</li>
+<li>(*load_method)(cls, SEL_load)</li>
+</ul>
+</li>
+<li>+load方法是根据方法地址直接调用，并不是经过objc_msgSend函数调用</li>
+</ul>
+<h3><span id="voidinitialize与voidload方法的区别">+(void)initialize与+(void)load方法的区别：</span></h3>
+<ul>
+<li><code>+(void)initialize</code>方法是通过objc_msgSend进行调用的，而<code>+(void)load</code>方法是直接对应的方法地址进行调用用的；</li>
+<li><code>+(void)initialize</code>方法会在类第一次接收到消息时调用(如下图一runtime源码)；</li>
+<li>调用顺序：对应的类存在继承时，会先调用父类<code>+(void)initialize</code>方法，再调用子类的<code>+(void)initialize</code>方法(如下图二runtime源码)；</li>
+<li>也正因为<code>+(void)initialize</code>方法是通过objc_msgSend进行调用，所以存在以两种情况：
+<ul>
+<li>所以如果分类实现了<code>+(void)initialize</code>，就会覆盖类本身的<code>+(void)initialize</code>方法；</li>
+<li>如果子类没有实现<code>+(void)initialize</code>方法，会调用父类的<code>+(void)initialize</code>方法，所以父类的<code>+(void)initialize</code>有可能会被调用多次；</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20181011214333.png" alt="判定是否初始化"></p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20181011214956.png" alt="递归调用initialize"></p>
+<h4><span id="objc4源码解读过程">objc4源码解读过程</span></h4>
+<ul>
+<li>objc-msg-arm64.s
+<ul>
+<li>objc_msgSend</li>
+</ul>
+</li>
+<li><a href="http://objc-runtime-new.mm" target="_blank" rel="noopener">objc-runtime-new.mm</a>
+<ul>
+<li>class_getInstanceMethod</li>
+<li>lookUpImpOrNil</li>
+<li>lookUpImpOrForward</li>
+<li>_class_initialize</li>
+<li>callInitialize</li>
+<li>objc_msgSend(cls, SEL_initialize)</li>
+</ul>
+</li>
+</ul>
+<h3><span id="关联对象">关联对象：</span></h3>
+<p>Category无法添加成员变量，但可以通过关联对象的api来间接的实现给对象添加属性；</p>
+<p><strong>原理：</strong></p>
+<ul>
+<li>关联对象并不是存储在被关联对象本身内存中</li>
+<li>关联对象存储在全局的统一的一个AssociationsManager中</li>
+<li>设置关联对象为nil，就相当于是移除关联对象</li>
+<li>实现关联对象技术的核心对象有
+<ul>
+<li>AssociationsManager</li>
+<li>AssociationsHashMap</li>
+<li>ObjectAssociationMap</li>
+<li>ObjcAssociation</li>
+</ul>
+</li>
+<li>objc4源码解读：<a href="http://objc-references.mm" target="_blank" rel="noopener">objc-references.mm</a></li>
+</ul>
+<p>说明：通过一个<code>AssociationManager</code>的类来管理关联的对象，<code>AssociationManager</code>里面存放着一个<code>AssociationsHashMap</code>对象，里面以类似字典的形式来存放所关联的对象，及关联信息，所关联的对象作为key(disguised_ptr_t)，关联信息为值(ObjectAssociationMap)；<code>ObjectAssociationMap</code>又是以字典形式存放对应信息的：<code>const void *key</code>作为key，值即包装成了一个<code>ObjectAssociation</code>，里面存着：关联策略、关联的值。(如下图)</p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20181016203113.png" alt=""></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/02/22/Runtime/" data-toggle="tooltip" data-placement="top" title="Runtime">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/22/1677ziyouxing/" data-toggle="tooltip" data-placement="top" title="穿越318线川藏游记">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Category</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">扩展里面的方法存放</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Category的实现原理：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Category和Class Extension的区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Category的加载过程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">+(void)load为什么里不会覆盖？</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">+(void)load方法什么时候调用(总结)：</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.6.1.</span> <span class="toc-nav-text">objc4源码解读过程：</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">+(void)initialize与+(void)load方法的区别：</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.7.1.</span> <span class="toc-nav-text">objc4源码解读过程</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text">关联对象：</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
+                        
+                          <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/iOS-Category/";
+    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/iOS-Category/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/being_sun_">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3108755861">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; nenhall 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.jianshu.com/u/51ba9ff4be5b/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://www.jianshu.com/u/51ba9ff4be5b/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
