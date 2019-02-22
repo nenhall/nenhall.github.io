@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Runtime - nenhall | 小浩浩工作室
+        
+    </title>
+
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/Runtime/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('note_head_img.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
+                            
+                              <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+                            
+                        </div>
+                        <h1>Runtime</h1>
+                        <h2 class="subheading">__forwarding_ 底层实现解剖</h2>
+                        <span class="meta">
+                            Posted by nenhall on
+                            2019-02-22
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">nenhall.blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/photograph/">Photograph</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="runtime">runtime</span></h1>
+<ul>
+<li>什么是Runtime？平时项目中有用过么？
+<ul>
+<li>OC是一门动态性比较强的编程语言，允许很多操作推迟到程序运行时再进行</li>
+<li>OC的动态性就是由Runtime来支撑和实现的，Runtime是一套C语言的API，封装了很多动态性相关的函数</li>
+<li>平时编写的OC代码，底层都是转换成了Runtime API进行调用</li>
+</ul>
+</li>
+<li>具体应用
+<ul>
+<li>利用关联对象（AssociatedObject）给分类添加属性</li>
+<li>遍历类的所有成员变量（修改textfield的占位文字颜色、字典转模型、自动归档解档）</li>
+<li>交换方法实现（交换系统的方法）</li>
+<li>利用消息转发机制解决方法找不到的异常问题</li>
+</ul>
+</li>
+</ul>
+<h3><span id="方法缓存">方法缓存</span></h3>
+<p><strong>缓存策略：方法调用后会存入方法缓存列表，以键值对形式存储，方法地址作为key，具体方法作为值，如果调用的是父类的方法，本类中没有缓存，调用时会缓存到自己的缓存方法列表中；</strong></p>
+<p><strong>缓存方法查找：先从自己的缓存方法列表中查找，如果没有找到则去一层层的往父类查找，查找到同时会缓存到自己的缓存方法列表里面；</strong></p>
+<h2><span id="objc_msgsend执行流程">objc_msgSend执行流程</span></h2>
+<blockquote>
+<p>objc_msgSend执行流程可以分为3大阶段:</p>
+<ul>
+<li>消息发送阶段</li>
+<li>动态方法解析阶段</li>
+<li>消息转发阶段</li>
+</ul>
+</blockquote>
+<h3><span id="一-消息发送阶段">一、消息发送阶段：</span></h3>
+<blockquote>
+<p>OC中的方法调用，其实都是转换为objc_msgSend函数的调用</p>
+<p>消息发送阶段：消息接收者通过isa指针找到接收者的类对象，再从接收者的类对象中找到方法实现，找到方法后，还会缓存到方法缓存列表，方便下次调用</p>
+<p>**注：**如果消息接收者是类对象（调用的是类方法），那么就是：类对象通过父类的isa找到superClass(即元类对象)；类对象的类对象 == 元类对象</p>
+</blockquote>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190209184255.png" alt=""></p>
+<h3><span id="二-动态方法解析阶段">二、动态方法解析阶段：</span></h3>
+<blockquote>
+<p>下图中进入消息发送流程时，如果在动态解析方法做了处理，找到了方法实现，那在调用方法实现的同时还会做方法缓存处理。</p>
+</blockquote>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190219225443.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// Method可以理解为等价于struct method_t *</span><br><span class="line">// struct method_t *otherMethod = (struct method_t *)class_getInstanceMethod(self, @selector(other));</span><br><span class="line">struct method_t &#123;</span><br><span class="line">    SEL sel;</span><br><span class="line">    char *types;</span><br><span class="line">    IMP imp;</span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line">void c_other(id self, SEL _cmd) &#123;</span><br><span class="line">    NSLog(@&quot;c_other - %@ - %@&quot;, self, NSStringFromSelector(_cmd));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel &#123;</span><br><span class="line">    if (sel == @selector(test)) &#123;</span><br><span class="line">        // 动态添加test方法的实现</span><br><span class="line">        /** 写法一：*/</span><br><span class="line">        // &quot;v16@0:8&quot; 解读：返回值为void，16为这个方法共占用16字节，</span><br><span class="line">        // @代表第一个参数类型为id类型，0代表@参数从内存的第0个位置开始，:代表第二个参数类型为SEL，:号后面8代表:参数是从内存中的第8个位置开始</span><br><span class="line">        class_addMethod(self, sel, (IMP)c_other, &quot;v16@0:8&quot;);</span><br><span class="line">        </span><br><span class="line">        /** 写法二：*/</span><br><span class="line">        // 获取其他方法</span><br><span class="line">        Method method = class_getInstanceMethod(self, @selector(other));</span><br><span class="line">        // 动态添加test方法的实现</span><br><span class="line">        class_addMethod(self, sel,</span><br><span class="line">                        method_getImplementation(method),</span><br><span class="line">                        method_getTypeEncoding(method));</span><br><span class="line">        </span><br><span class="line">        // 返回YES代表有动态添加方法</span><br><span class="line">        return YES;</span><br><span class="line">    &#125;</span><br><span class="line">    return [super resolveInstanceMethod:sel];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如下图objc源码中可以看出：<br>
+会先判定方法是否动态解析过(triedResolver)，如果没有，则进入动态解析，如果解析过，则进入消息转发流程(_objc_msgForward_impcache)，并缓存方法到缓存方法列表中，便于下次调用；</p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190219232606.png" alt=""></p>
+<h3><span id="三-消息转发">三、消息转发：</span></h3>
+<p>动态方法解析阶段没有做处理的时候，会进入消息转发阶段，</p>
+<ul>
+<li>
+<p>消息转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (id)forwardingTargetForSelector:(SEL)aSelector</span><br><span class="line">&#123;</span><br><span class="line">    if (aSelector == @selector(test)) &#123;</span><br><span class="line">        /* 从本质上讲，其实也就是在调用这句代码：</span><br><span class="line">        objc_msgSend([[Cat alloc] init], aSelector)</span><br><span class="line">        **/</span><br><span class="line">        return [[Cat alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">    return [super forwardingTargetForSelector:aSelector];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果在- (id)forwardingTargetForSelector:方法还是没有处理，那接下会来到下面的返回方法签名方法</p>
+</li>
+</ul>
+<ul>
+<li>
+<p>返回方法签名：- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector</p>
+<p>只有在返回方法签名的方法中返回了正确的方法签名，否则不会进入下面的方法，一样崩溃</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 方法签名：返回值类型、参数类型</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector</span><br><span class="line">&#123;</span><br><span class="line">    if (aSelector == @selector(test)) &#123;</span><br><span class="line">        //以下两句代码是等价的，参数的占用位置可以省略不写</span><br><span class="line">        return [NSMethodSignature signatureWithObjCTypes:&quot;v20@0:8i16&quot;];</span><br><span class="line">        return [NSMethodSignature signatureWithObjCTypes:&quot;v@:i&quot;];</span><br><span class="line">        //补充：使用这种方法直接返回也是可以，但前提是Cat对象需要实现对的方法</span><br><span class="line">        return [[[Cat alloc] init] methodSignatureForSelector:aSelector];</span><br><span class="line">    &#125;</span><br><span class="line">    return [super methodSignatureForSelector:aSelector];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回了正常方法签名后，必须实现- (void)forwardInvocation:方法</p>
+</li>
+</ul>
+<ul>
+<li>
+<p>方法转发处理：- (void)forwardInvocation:(NSInvocation *)anInvocation</p>
+<p>在这个方法中，我们就可以随意处理了，随意处理即：你可以什么事都不做，只实现这个方法就可以了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> NSInvocation封装了一个方法调用，包括：方法调用者、方法名、方法参数</span><br><span class="line"> anInvocation.target 方法调用者</span><br><span class="line"> anInvocation.selector 方法名</span><br><span class="line"> [anInvocation getArgument:NULL atIndex:0]</span><br><span class="line"> */</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation</span><br><span class="line">&#123;</span><br><span class="line">//    转发给Cat对象去处理，当然Cat需要实现了对应的方法，不然还是崩溃</span><br><span class="line">//    anInvocation.target = [[Cat alloc] init];</span><br><span class="line">//    [anInvocation invoke];</span><br><span class="line">    //等价上面的代码</span><br><span class="line">    [anInvocation invokeWithTarget:[[Cat alloc] init]];</span><br><span class="line">    </span><br><span class="line">    /* 获取第一个参数</span><br><span class="line">     atIndex:2 因为第0位是消息接收者，第1位当前的selector，但也不能超出下标，否则崩溃</span><br><span class="line">     */</span><br><span class="line">    int value;</span><br><span class="line">    [anInvocation getArgument:&amp;value atIndex:2];</span><br><span class="line">    NSLog(@&quot;argument：%d&quot;, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2><span id="类对象的消息转发阶段">类对象的消息转发阶段</span></h2>
+<ul>
+<li>因为是类方法，所以是+号开头，但直接靠代码自动提示，是没有的，敲不出来的，方法名与实例方法名一样</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">+ (id)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">    // objc_msgSend([[Cat alloc] init], @selector(test))</span><br><span class="line">    if (aSelector == @selector(test)) &#123;</span><br><span class="line">        return [Cat class];</span><br><span class="line">    &#125;</span><br><span class="line">    return [[Cat alloc] init];</span><br><span class="line">    return [super forwardingTargetForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector &#123;</span><br><span class="line">    if (aSelector == @selector(test)) return [NSMethodSignature signatureWithObjCTypes:&quot;v@:&quot;];</span><br><span class="line">    </span><br><span class="line">    return [super methodSignatureForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)forwardInvocation:(NSInvocation *)anInvocation &#123;</span><br><span class="line">    NSLog(@&quot;abc&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="补充内容从objc的本质去看消息转发实现">补充内容：从objc的本质去看消息转发实现</span></h3>
+<ul>
+<li>
+<p>先来写一段测试代码：</p>
+<ul>
+<li>条件1：方法调用者是类对象，调用类方法；</li>
+<li>条件2：在<code>+forwardingTargetForSelector</code>中返回一个实例对象(正常情况应该是返回一个类对象);</li>
+<li>条件3：在这个类里面对应的类方法和实例方法都实现，看运行后程序级否调用成功；</li>
+</ul>
+<p>分别有两个类：Cat、Person，然后Person在main函数中调用test方法，Person实现中进行转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// Cat</span><br><span class="line">@interface Cat : NSObject</span><br><span class="line">+ (void)test;</span><br><span class="line">- (void)test;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Cat</span><br><span class="line">+ (void)test &#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;, __func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)test &#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;, __func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line">    </span><br><span class="line">// Person</span><br><span class="line">@interface Person : NSObject</span><br><span class="line">+ (void)test;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line">+ (id)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">    if (aSelector == @selector(test)) return [[Cat alloc] init];</span><br><span class="line">    return [super forwardingTargetForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// main.m</span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">       //调用Person类对象的test方法</span><br><span class="line">        [Person test];</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行后的打印结果是：</p>
+<p>注意：没有崩溃，并成功的调用了-开头的test方法，为什么会这样，我们继续往下看，等下解答</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2018<span class="selector-tag">-02-21</span> 22<span class="selector-pseudo">:33</span><span class="selector-pseudo">:51.863918+0800</span> 消息转发<span class="selector-attr">[4731:536691]</span> <span class="selector-tag">-</span><span class="selector-attr">[Cat test]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><code>__forwarding__</code>这一部份的实现是不开源的，只能我们自己去摸索猜测，但有国外的开发者已经按苹果objc源码分析出了<code>__forwarding__</code>的内部实现，虽然不能保证是一模一样的，但大致的流程是一致的，如下图是来自国外开发者对其实现的分析的<strong>伪代码</strong>：</p>
+<ul>
+<li>
+<p>在调用<code>(id)forwardingTargetForSelector:(SEL)aSelector</code>方法的不管是实例对象对还是类对象，最终都是在调用<code>objc_msgSend(…)</code>，所以刚在的现象也就很好的解释了：</p>
+<p><strong>它的内部不会关心是类还是实例，只关心是谁是消息接收者，消息接收者有没有实现对应的方法。</strong></p>
+</li>
+</ul>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190221214800.png" alt=""></p>
+</li>
+</ul>
+<h3><span id="讲一下-oc-的消息机制">讲一下 OC 的消息机制</span></h3>
+<ul>
+<li>OC中的方法调用其实都是转成了objc_msgSend函数的调用，给receiver（方法调用者）发送了一条消息（selector方法名）</li>
+<li>objc_msgSend底层有3大阶段
+<ul>
+<li>消息发送（缓存列表查找、方法数组查找、父类查找）</li>
+<li>动态方法解析</li>
+<li>消息转发</li>
+</ul>
+</li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/02/22/iOS-Block本质/" data-toggle="tooltip" data-placement="top" title="iOS-Block本质">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/02/22/iOS-Category/" data-toggle="tooltip" data-placement="top" title="iOS-Category">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">runtime</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.0.1.</span> <span class="toc-nav-text">方法缓存</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">objc_msgSend执行流程</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">一、消息发送阶段：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">二、动态方法解析阶段：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text">三、消息转发：</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">类对象的消息转发阶段</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">补充内容：从objc的本质去看消息转发实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">讲一下 OC 的消息机制</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#底层原理" title="底层原理">底层原理</a>
+                        
+                          <a class="tag" href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/Runtime/";
+    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/Runtime/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/being_sun_">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3108755861">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; nenhall 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.jianshu.com/u/51ba9ff4be5b/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://www.jianshu.com/u/51ba9ff4be5b/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
