@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="sitemap.xsl"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+
     <url>
         <loc>https://www.jianshu.com/u/51ba9ff4be5b/tags/%E6%B8%B8%E8%AE%B0/</loc>
         <lastmod>2018-10-08T08:00:04.000Z</lastmod>
@@ -17,28 +18,28 @@
 
     <url>
         <loc>https://www.jianshu.com/u/51ba9ff4be5b/tags/%E5%9F%BA%E7%A1%80%E7%89%88/</loc>
-        <lastmod>2019-02-22T15:04:05.309Z</lastmod>
+        <lastmod>2019-02-22T15:04:05.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://www.jianshu.com/u/51ba9ff4be5b/tags/Node-js/</loc>
-        <lastmod>2019-02-22T15:04:05.309Z</lastmod>
+        <lastmod>2019-02-22T15:04:05.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://www.jianshu.com/u/51ba9ff4be5b/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/</loc>
-        <lastmod>2019-02-22T15:07:05.501Z</lastmod>
+        <lastmod>2019-02-22T15:07:05.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://www.jianshu.com/u/51ba9ff4be5b/tags/Objective-C/</loc>
-        <lastmod>2019-02-22T15:07:05.501Z</lastmod>
+        <lastmod>2019-02-22T15:07:05.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
