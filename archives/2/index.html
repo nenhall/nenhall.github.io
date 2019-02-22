@@ -2,13 +2,13 @@
 <html lang="en">
 
 <!-- Head tag -->
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="keyword"  content="">
+    <meta name="keyword" content="">
     <link rel="shortcut icon" href="/img/ironman-draw.png">
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
@@ -80,7 +80,7 @@
     
 </style>
 
-<header class="intro-header" >
+<header class="intro-header">
     <!-- Signature -->
     <div id="signature">
         <div class="container">
@@ -136,13 +136,6 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/archive/">Archives</a>
                         </li>
                         
@@ -150,7 +143,7 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -158,6 +151,13 @@
                         
                         <li>
                             <a href="/photograph/">Photograph</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -315,47 +315,6 @@
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/NSObject的本质/">
-        <h2 class="post-title">
-            NSObject的本质
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            NSObject的编译过程：
-
-
-我们平时编写的oc代码，底层实现其实都是C/C++代码：
-Objective-C &gt; C/C++ &gt; 汇编语言 &gt; 机器语言代码
-Objective-C对象主要是基于C/C++的结构体来实现的.
-
-
-OC代码转成C++代码：
-我们需要借助转换后的代码来分析
-
-终端命令：xcrun -sdk iphoneos clang -arch arm6......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by nenhall on
-            2018-08-17
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#底层原理" title="底层原理">底层原理</a>
-            
-              <a href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
     <a href="/2018/08/17/OC对象分类/">
         <h2 class="post-title">
             OC对象分类
@@ -377,6 +336,47 @@ isa指针；
 
 class对象
 注意：每个类对象在内存......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by nenhall on
+            2018-08-17
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#底层原理" title="底层原理">底层原理</a>
+            
+              <a href="/tags/#Objective-C" title="Objective-C">Objective-C</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/08/17/NSObject的本质/">
+        <h2 class="post-title">
+            NSObject的本质
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            NSObject的编译过程：
+
+
+我们平时编写的oc代码，底层实现其实都是C/C++代码：
+Objective-C &gt; C/C++ &gt; 汇编语言 &gt; 机器语言代码
+Objective-C对象主要是基于C/C++的结构体来实现的.
+
+
+OC代码转成C++代码：
+我们需要借助转换后的代码来分析
+
+终端命令：xcrun -sdk iphoneos clang -arch arm6......
         </div>
     </a>
     
@@ -495,7 +495,7 @@ class对象
     <div class="short-about">
 
         
-            <img id = "avatar_pic" src="/img/ironman-draw.png" />
+            <img id="avatar_pic" src="/img/ironman-draw.png">
         
 
         
@@ -550,7 +550,7 @@ class对象
 
             
                 <li>
-                    <a target="_blank"  href="https://github.com/nenhall">
+                    <a target="_blank" href="https://github.com/nenhall">
                         <span class="fa-stack fa-lg">
                             <i class="fa fa-circle fa-stack-2x"></i>
                             <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -567,7 +567,7 @@ class对象
         <hr>
     
         
-  <h5>RECENT POSTS</h3>
+  <h5>RECENT POSTS
   <div class="widget">
     <ul>
       
@@ -593,7 +593,7 @@ class对象
       
     </ul>
   </div>
-
+</h5>
         <hr>
     
         <!-- Friends Blog -->
@@ -660,7 +660,7 @@ class对象
 
                 
                     <li>
-                        <a target="_blank"  href="https://github.com/nenhall">
+                        <a target="_blank" href="https://github.com/nenhall">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -680,10 +680,7 @@ class对象
                         <i class="fa fa-heart"></i>
                     </span> 
                     re-Ported by <a href="http://beantech.org">BeanTech</a> | 
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="91px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true">
                     </iframe>
                 </p>
             </div>
