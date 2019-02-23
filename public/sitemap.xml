@@ -12,11 +12,6 @@
     </sitemap>
 
     <sitemap>
-        <loc>https://www.jianshu.com/u/51ba9ff4be5b/category-sitemap.xml</loc>
-        
-    </sitemap>
-
-    <sitemap>
         <loc>https://www.jianshu.com/u/51ba9ff4be5b/tag-sitemap.xml</loc>
         <lastmod>2018-10-08T13:49:20.000Z</lastmod>
     </sitemap>
