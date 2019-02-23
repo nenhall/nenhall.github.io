@@ -5,10 +5,9 @@ date: 2019-02-22 22:57:26
 subtitle:
 header-img: note_head_img.jpg
 catagories:
-  - Objective-C
+  - Node.js
 tags:
-  - NSObject
-  - 底层原理
+  - Node.js
 ---
 
 Node.js 学习笔记
