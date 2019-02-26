@@ -3,7 +3,7 @@ title: 'iOS armv7, armv7s, arm64区别与应用32位、64位配置'
 catalog: true
 date: 2018-08-29 17:18:39
 subtitle: 详细了解手机架构
-header-img: note_head_img.jpg
+header-img: headimg.jpg
 catagories:
   - Objective-C
 tags:
