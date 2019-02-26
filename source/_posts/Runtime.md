@@ -11,7 +11,7 @@ tags:
   - 底层原理
 ---
 
-# runtime
+# Runtime
 
 - 什么是Runtime？平时项目中有用过么？
   - OC是一门动态性比较强的编程语言，允许很多操作推迟到程序运行时再进行
@@ -257,10 +257,218 @@ void c_other(id self, SEL _cmd) {
 
   ![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190221214800.png)
 
-###  讲一下 OC 的消息机制
+### 讲一下 OC 的消息机制
 
 - OC中的方法调用其实都是转成了objc_msgSend函数的调用，给receiver（方法调用者）发送了一条消息（selector方法名）
 - objc_msgSend底层有3大阶段
   - 消息发送（缓存列表查找、方法数组查找、父类查找）
   - 动态方法解析
   - 消息转发
+
+### super 调用机制
+
+​	在实际开发中，我们经常会做类继承，然后在子类中调用super 的方法，但有没想过super底层到底做了，利用下面的例子我们来解剖下：
+
+```objective-c
+// Student继承Person，Person继承NSObject
+@interface Student : Person
+@end
+
+@implementation Student
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+    	// 如下打印结果，按我们正常的逻辑应该是按右边所写的一样：
+        NSLog(@"[self class] = %@", [self class]); // Student
+        NSLog(@"[self superclass] = %@", [self superclass]); // Person
+        
+        NSLog(@"--------------------------------");
+        
+        NSLog(@"[super class] = %@", [super class]); // Person
+        NSLog(@"[super superclass] = %@", [super superclass]); // NSObject
+    }
+    return self;
+}
+@end
+```
+
+我们来看下实际打印结果：
+
+```
+objc[7184:170674] [self class] = Student
+objc[7184:170674] [self superclass] = Person
+objc[7184:170674] --------------------------------
+objc[7184:170674] [super class] = Student
+objc[7184:170674] [super superclass] = Person
+```
+
+跟我们猜想的不一样，接下来我们将新写一个简单的`- (void)run`方法并转为C++底层的实现代码看其内部做了什么，因为刚才init方法内部调用的方法太多了，不便于我们分析：
+
+1. 代码部份：
+
+   ```objective-c
+   @interface Student : Person
+   @end
+   @implementation Student
+   - (void)run {
+       [super run];
+   }
+   @end
+   ```
+
+2. 转成C++代码：
+
+   `-sdk iphoneos clang -arch arm64 -rewrite-objc /Users/nenhall/Lib/objc/objc/Student.m`
+
+3. 在Student.cpp文件中找到对应的实现：
+
+   ```c++
+   // @implementation Student
+   static void _I_Student_run(Student * self, SEL _cmd) {
+       ((void (*)(__rw_objc_super *, SEL))(void *)objc_msgSendSuper)((__rw_objc_super){
+           (id)self,
+           (id)class_getSuperclass(objc_getClass("Student"))
+       }, sel_registerName("run"));
+   }
+   ```
+
+4. 你会发现__rw_objc_super是一个结构体，但到这里还是不知道\_\_rw_objc_super`是个什么鬼东西，此时我们借助官方的runtime源码搜索下，搜索结果如下：也就是说`\_\_rw_objc_super` 就是`objc_super
+
+   ![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190226111637.png)
+
+5. 结构体内部有两个成员：receiver(消息接收者)、superclass(父类)：
+
+   ```c++
+   //此步结论：
+   struct objc_super {
+       // 消息接收者
+       __unsafe_unretained _Nonnull id receiver;
+       __unsafe_unretained _Nonnull Class superclass;
+   }
+   ```
+
+6. 现在我们再回到Student.run方法的转C++实现部份：
+
+   ```c++
+   // @implementation Student
+   static void _I_Student_run(Student * self, SEL _cmd) {
+       ((void (*)(__rw_objc_super *, SEL))(void *)objc_msgSendSuper)((__rw_objc_super){
+           (id)self,
+           (id)class_getSuperclass(objc_getClass("Student"))
+       }, sel_registerName("run"));
+   }
+   
+   //将方法整理下，便于阅读：
+   // @implementation Student 整理后
+   //声明一个结构体对象
+   static objc_super = {
+           (id)self,
+           (id)class_getSuperclass(objc_getClass("Student"))
+       }
+   //调用 objc_msgSendSuper方法
+   objc_msgSendSuper(objc_super, sel_registerName("run"));
+   //此步结论：从上面的代码就好分析了，调用`objc_msgSendSuper`方法的时候传了两个值进去：一个是objc_super结构体和SEL(run方法)，objc_super结构体里面
+   ```
+
+7. 我们再回到student oc的实现代码，结合上面得到的代码进行分析：
+
+   ```c++
+   @interface Student : Person
+   @end
+   @implementation Student
+   - (void)run {
+       // [super run];
+   	/**
+       objc_super: 结构体里面的self是谁，当然是当前方法里面的self->Student
+       class_getSuperclass: objc_getClass("Student")结果==Student 
+       					再 class_getSuperclass 结果是 Person
+       */
+   	static objc_super = {
+           (id)self,
+           (id)class_getSuperclass(objc_getClass("Student"))
+       }
+       objc_msgSendSuper(objc_super, sel_registerName("run"));
+   }
+   @end
+   ```
+
+8. 现在我们只差一步，要知道`objc_msgSendSuper`的实现部份，还是去runtime官方源码里面查找，可以查找到如下结果：
+
+   1. 蓝色部份：包含一个消息接收者
+   2. 红色部份：意思就是说superclass是为了告诉系统从那个地方开始去搜索方法实现
+
+   ![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190226114719.png)
+
+9. 现在我们回到objc_msgSendSuper方法：
+
+   ```objective-c
+   @implementation Student
+   - (void)run {
+       // [super run];
+   	static objc_super = {
+           (id)self,
+           (id)class_getSuperclass(objc_getClass("Student"))
+       }
+       /**
+   	我们上面已经知道 objc_super: 结构体里面的 self 是 Student
+   	class_getSuperclass 是: Person
+   	那下面这句代码的意思就是：
+   	消息接收者是 Student，只是从 Person 里面开始查找run方法，如果 Person 里面没有找到就会往上一层层找，直到找到，找到后就调用
+       */
+       objc_msgSendSuper(objc_super, sel_registerName("run"));
+   }
+   @end
+   ```
+
+   **结论**：`[super xxxxx]`的底层实现：
+
+   - 消息接收者仍然是子类对象
+   - 只不过从父类开始查找方法
+
+10. 最后回到init化代码部份:
+
+    ```objective-c
+    @implementation Student
+    - (instancetype)init
+    {
+        self = [super init];
+        if (self) {
+            NSLog(@"[self class] = %@", [self class]); // Student
+            NSLog(@"[self superclass] = %@", [self superclass]); // Person
+            
+            NSLog(@"--------------------------------");
+            
+            /** 经过上面的分析现在我们可以做如下结论：
+            	1. [super class] 在底层其实就是转换成了 objc_msgSendSuper({self, [Person class]}, @selector(class)) 这个方法
+            	2. 表面上看是super在调用class这个方法，但消息接收者还是self，也就是相当于 self 在调用 class方法，
+            	3. 在NSObject中class和superclass方法的底层实现如最下面代码段
+            	4. 所以打印结果会是:
+               		[super class] == Student 
+               		[super superclass] == Person;
+            */
+            // objc_msgSendSuper({self, [Person class]}, @selector(class)) 
+            NSLog(@"[super class] = %@", [super class]); // Student
+            NSLog(@"[super superclass] = %@", [super superclass]); // Person
+        }
+        return self;
+    }
+    @end
+    // runtimer源码->class、superclass的底层实现
+    @implementation NSObject
+    - (Class)class {
+        return object_getClass(self);
+    }
+    - (Class)superclass {
+        // 这个返回什么还是在消息接收者是谁
+        return class_getSuperclass(object_getClass(self));
+    }
+    @end
+    ```
+
+
+
+本章讨论结束
+
+
+

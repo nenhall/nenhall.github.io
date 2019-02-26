@@ -132,21 +132,21 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/about/">关于我</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/archive/">时间线</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/tags/">文章标签</a>
                         </li>
                         
                     
@@ -306,27 +306,26 @@
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/OC对象分类/">
+    <a href="/2018/08/17/NSObject的本质/">
         <h2 class="post-title">
-            OC对象分类
+            NSObject的本质
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            OC对象分类
+            NSObject的编译过程：
 
-OC对象分类：instance对象(实例对象)、class对象(类对象)、meta-class对象(元类对象)；
 
-instance对象
-**定义：**通过类alloc出来的对象，就是instance对象，每次调用alloc都会产生新的instance对象；
-instance对象在内存中存储的信息包括：
+我们平时编写的oc代码，底层实现其实都是C/C++代码：
+Objective-C &gt; C/C++ &gt; 汇编语言 &gt; 机器语言代码
+Objective-C对象主要是基于C/C++的结构体来实现的.
 
-isa指针；
-其它成员变量；
 
-class对象
-注意：每个类对象在内存......
+OC代码转成C++代码：
+我们需要借助转换后的代码来分析
+
+终端命令：xcrun -sdk iphoneos clang -arch arm6......
         </div>
     </a>
     
@@ -348,26 +347,27 @@ class对象
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/NSObject的本质/">
+    <a href="/2018/08/17/OC对象分类/">
         <h2 class="post-title">
-            NSObject的本质
+            OC对象分类
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            NSObject的编译过程：
+            OC对象分类
 
+OC对象分类：instance对象(实例对象)、class对象(类对象)、meta-class对象(元类对象)；
 
-我们平时编写的oc代码，底层实现其实都是C/C++代码：
-Objective-C &gt; C/C++ &gt; 汇编语言 &gt; 机器语言代码
-Objective-C对象主要是基于C/C++的结构体来实现的.
+instance对象
+**定义：**通过类alloc出来的对象，就是instance对象，每次调用alloc都会产生新的instance对象；
+instance对象在内存中存储的信息包括：
 
+isa指针；
+其它成员变量；
 
-OC代码转成C++代码：
-我们需要借助转换后的代码来分析
-
-终端命令：xcrun -sdk iphoneos clang -arch arm6......
+class对象
+注意：每个类对象在内存......
         </div>
     </a>
     
@@ -563,7 +563,7 @@ OC代码转成C++代码：
     <ul>
       
         <li>
-          <a href="/2019/02/22/Nodejs-入门篇/">Nodejs 入门篇</a>
+          <a href="/2019/02/22/Node.js-入门篇/">Nodejs 入门篇</a>
         </li>
       
         <li>
@@ -772,25 +772,23 @@ OC代码转成C++代码：
 <!-- Google Analytics -->
 
 
-<script>
-    // dynamic User by Hux
-    var _gaId = 'UA-XXXXXXXX-X';
-    var _gaDomain = 'yoursite';
-
-    // Originial
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', _gaId, _gaDomain);
-    ga('send', 'pageview');
-</script>
-
-
 
 
 <!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '3e48be55277ebe20a86b88ff3ec1';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
 
 
 

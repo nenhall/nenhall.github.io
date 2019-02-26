@@ -52,10 +52,10 @@ duoshuo_share: true                     # set to false if you want to use Commen
 
 # Analytics settings
 # Baidu Analytics
-# ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
+ba_track_id: 3e48be55277ebe20a86b88ff3ec1
 # Google Analytics
-ga_track_id: 'UA-XXXXXXXX-X'          # Format: UA-xxxxxx-xx
-ga_domain: yoursite
+# ga_track_id: 'UA-XXXXXXXX-X'          # Format: UA-xxxxxx-xx
+# ga_domain: yoursite
 
 
 # Sidebar settings

@@ -11,14 +11,25 @@ tags:
   - 底层原理
 ---
 
-## Category
+## iOS-Category与 Class Extension
 
-### 扩展里面的方法存放
+## Category( 分类 )
+
+### 概念
+
+分类（Category）是OC中的特有语法，它是表示一个指向分类的结构体的指针。原则上它只能增加方法，不能增加成员（实例）变量。
+
+1. 分类中的可以写@property, 但不会生成`setter/getter`方法, 也不会生成实现以及私有的成员变量（编译时会报警告）;
+2. 可以在分类中访问原有类中.h中的属性;
+3. 如果分类中有和原有类同名的方法, 会优先调用分类中的方法, 就是说会忽略原有类的方法。所以同名方法调用的优先级为 `分类 > 本类 > 父类`。
+4. 如果多个分类中都有和原有类中同名的方法, 那么调用该方法的时候执行谁由编译器决定；编译器会执行最后一个参与编译的分类中的方法。
+
+### 分类里面的方法存放
 
 - 对象方法：不管写了多少个分类，分类里面写了多少对象方法，最终(注意)都是存放在唯一的一个类对象里面，调用的时候都是通过instance的isa指针去(class)那里面找。
 - 类方法：不管写了多少个分类，分类里面写了多少类方法，最终都是存放在唯一的一个元类(meta-class)里面，调用的时候都是通过class的isa指针去(meta-class)那里面找。
 
-![](/Users/nenhall/Desktop/iOS-Category.png)
+![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180816214104.png)
 
 - 最终通过runtime动态将分类的方法合并到类对象、元类对象中，并不是在编译的时候合并的；
 
@@ -56,8 +67,6 @@ tags:
 
 1. Class Extension在编译的时候，它的数据就已经包含在类信息中；
 2. Category是在运行时，才会将数据合并到类信息中；
-
-
 
 ### Category的加载过程
 
@@ -168,3 +177,36 @@ Category无法添加成员变量，但可以通过关联对象的api来间接的
 说明：通过一个`AssociationManager`的类来管理关联的对象，`AssociationManager`里面存放着一个`AssociationsHashMap`对象，里面以类似字典的形式来存放所关联的对象，及关联信息，所关联的对象作为key(disguised_ptr_t)，关联信息为值(ObjectAssociationMap)；`ObjectAssociationMap`又是以字典形式存放对应信息的：`const void *key`作为key，值即包装成了一个`ObjectAssociation`，里面存着：关联策略、关联的值。(如下图)
 
 ![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20181016203113.png)
+
+
+
+## 扩展（Class Extension）
+
+### 概念
+
+Extension是Category的一个特例。类扩展与分类相比只少了分类的名称，所以称之为“匿名分类”。
+其实开发当中经常使用，示例代码如下：
+
+```objective-c
+@interface Student ()
+@property (nonatomic, copy) NSString *name;
+@end
+
+@implementation Student
+@end
+```
+
+### 作用：
+
+- 为一个类添加额外的原来没有变量，方法和属性
+- 正常情况类扩展写到`.m`文件中
+- 一般私有的属性写到`.m`文件中的类扩展中
+
+
+
+## 类别与类扩展的区别：
+
+1. 类别中原则上只能增加方法（能添加属性的的原因只是通过`runtime`解决无`setter/getter`的问题而已）；
+2. 类扩展不仅可以增加方法，还可以增加实例变量（或者属性），只是该实例变量默认是@private类型的（用范围只能在自身类，而不是子类或其他地方）；
+3. 类扩展中声明的方法没被实现，编译器会报警，但是类别中的方法没被实现编译器是不会有任何警告的。这是因为**类扩展是在编译阶段被添加到类中，而类别是在运行时添加到类中**。
+4. 类扩展不能像类别那样拥有独立的实现部分（@implementation部分），也就是说，类扩展所声明的方法必须依托对应类的实现部分来实现。定义在 .m 文件中的类扩展方法为私有的，定义在 .h 文件（头文件）中的类扩展方法为公有的。类扩展是在 .m 文件中声明私有方法的非常好的方式。
