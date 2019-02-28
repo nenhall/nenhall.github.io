@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+    <meta name="keyword" content="000000000000000000">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Mac OS上编译ffmpeg命令行工具 - Nenhall | 小浩浩工作室
+        
+    </title>
+
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2019/02/28/Mac-OS上编译ffmpeg命令行工具/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('headimg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#ffmpeg" title="ffmpeg">ffmpeg</a>
+                            
+                        </div>
+                        <h1>Mac OS上编译ffmpeg命令行工具</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Nenhall on
+                            2019-02-28
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">小浩浩工作室</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">关于我</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">时间线</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">文章标签</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2><span id="在-mac-os-上编译ffmpeg命令行工具">在 Mac OS 上编译ffmpeg命令行工具</span></h2>
+<h3><span id="编译ffmpeg命令行工具">编译ffmpeg命令行工具</span></h3>
+<ol>
+<li>
+<p>下载源码：</p>
+<p>去官网下载源码：<a href="http://ffmpeg.org/download.html" target="_blank" rel="noopener">http://ffmpeg.org/download.html</a></p>
+</li>
+<li>
+<p>进入下到的ffmpeg文件夹内</p>
+</li>
+<li>
+<p>在终端执行配置编译命令：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./configure --prefix=/usr/<span class="keyword">local</span> --<span class="keyword">enable</span>-gpl --<span class="keyword">enable</span>-nonfree --<span class="keyword">enable</span>-libass \</span><br><span class="line">--<span class="keyword">enable</span>-libfdk-aac --<span class="keyword">enable</span>-libfreetype --<span class="keyword">enable</span>-libmp3lame --<span class="keyword">enable</span>-libopus \</span><br><span class="line">--<span class="keyword">enable</span>-libtheora --<span class="keyword">enable</span>-libvorbis --<span class="keyword">enable</span>-libvpx --<span class="keyword">enable</span>-libx264 --<span class="keyword">enable</span>-libxvid --extra-ldflags=-L/usr/<span class="keyword">local</span>/<span class="keyword">lib</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>根据配置进行安装</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">make</span> &amp;&amp; <span class="built_in">make</span> install</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在第3步进行配置编译的时候可能会因为缺少依赖库而报错，以下错误是比较常见的错误：</p>
+<ol>
+<li>
+<p>yasm/nasm not found or too old. Use --disable-yasm for a crippledbuild：</p>
+<p>yasm是汇编编译器，ffmpeg为了提高效率使用了汇编指令，如MMX和SSE等。所以系统中未安装yasm时，就会报上面错误。</p>
+<p>解决方法：</p>
+<p>安装yasm编译器；提供三种安装方法如下(那一种都可以，使用无区别)：</p>
+<ul>
+<li>
+<p>通过brew安装：brew install yasm</p>
+</li>
+<li>
+<p>通过apt-get安装：sudo apt-get install yasm</p>
+</li>
+<li>
+<p>如果不需要yasm也可以：./configure --disable-x86asm</p>
+</li>
+<li>
+<p>手动下载安装包进行安装：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/<span class="regexp">/在http:/</span><span class="regexp">/www.tortall.net/projects</span><span class="regexp">/yasm/releases</span>下面找到适合自己平台的yasm版本。然后进行安装。举例如下：</span><br><span class="line"><span class="number">1</span>）下载：wget <span class="symbol">http:</span>/<span class="regexp">/www.tortall.net/projects</span><span class="regexp">/yasm/releases</span><span class="regexp">/yasm-1.3.0.tar.gz</span></span><br><span class="line"><span class="regexp">2）解压：tar zxvf yasm-1.3.0.tar.gz</span></span><br><span class="line"><span class="regexp">3）切换路径： cd yasm-1.3.0</span></span><br><span class="line"><span class="regexp">4）执行配置： ./configure</span></span><br><span class="line"><span class="number">5</span>）编译：make</span><br><span class="line"><span class="number">6</span>）安装：make install</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li>
+<p>ERROR: libass not found using pkg-config</p>
+<p>需要安装 <a href="http://www.linuxfromscratch.org/blfs/view/svn/multimedia/libass.html" target="_blank" rel="noopener">libass</a> (字幕渲染库和滤镜也用到了这个库)</p>
+<p>方式一：手动安装；方式二：brew 安装(往下看)</p>
+<ol>
+<li>
+<p>clong libass的代码：</p>
+<p><code>$ git clone https://github.com/libass/libass.git</code></p>
+</li>
+<li>
+<p>下载 libass 相关的依懒包：</p>
+<ul>
+<li>
+<p><a href="http://www.linuxfromscratch.org/blfs/view/svn/general/freetype2.html" target="_blank" rel="noopener">FreeType</a>2下载后解压，进入解压包，执行：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">//</span> 在`Mac OS上`不要指定安装目录，即如下：</span><br><span class="line">$ <span class="string">./configure</span> <span class="params">--disable-static</span> &amp;&amp; make</span><br><span class="line"><span class="string">//</span> 上面是在`ubuntu`下指定安装目录，即如下：</span><br><span class="line"><span class="string">//</span> $ <span class="string">./configure</span> <span class="params">--prefix=/usr</span> <span class="params">--enable-freetype-config</span> <span class="params">--disable-static</span> &amp;&amp; make</span><br><span class="line">$ make check</span><br><span class="line"><span class="string">//</span> 上面这一步主要是检查能否正确安装，注意看终端的打印，有问题都会报出来，</span><br><span class="line"><span class="string">//</span> 没有问题就继续执行下一步：</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><a href="http://www.linuxfromscratch.org/blfs/view/svn/general/fribidi.html" target="_blank" rel="noopener">fribidi</a>下载后解压，进入解压包，执行：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">//</span> 在`Mac OS上`不要指定安装目录，即如下：</span><br><span class="line">$ <span class="string">./configure</span> <span class="params">--disable-static</span> &amp;&amp; make</span><br><span class="line"><span class="string">//</span> 上面是在`ubuntu`下指定安装目录，即如下：</span><br><span class="line"><span class="string">//</span>$ <span class="string">./configure</span> <span class="params">--prefix=/usr</span> <span class="params">--disable-docs</span> &amp;&amp; make</span><br><span class="line">$ make check</span><br><span class="line"><span class="string">//</span> 上面这一步主要是检查能否正确安装，注意看终端的打印，有问题都会报出来，</span><br><span class="line"><span class="string">//</span> 没有问题就继续执行下一步：</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><a href="http://www.linuxfromscratch.org/blfs/view/svn/general/fontconfig.html" target="_blank" rel="noopener">fontconfig</a>下载后解压，进入解压包，执行：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ rm -f src/fcobjshash.h</span><br><span class="line">$ ./configure <span class="attribute">--prefix</span>=/usr \</span><br><span class="line">      <span class="attribute">--sysconfdir</span>=/etc \</span><br><span class="line">      <span class="attribute">--localstatedir</span>=/var \</span><br><span class="line">      --disable-docs \</span><br><span class="line">      <span class="attribute">--docdir</span>=/usr/share/doc/fontconfig-2.13.0 &amp;&amp; make</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><a href="http://www.linuxfromscratch.org/blfs/view/svn/general/nasm.html" target="_blank" rel="noopener">NASM</a> 下载压缩包后，进入对应目录，执行：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ tar -xf <span class="built_in">..</span>/nasm-2.14.02-xdoc.tar.xz <span class="attribute">--strip-components</span>=1</span><br><span class="line">$ ./configure <span class="attribute">--prefix</span>=/usr &amp;&amp; make</span><br><span class="line">$ make install</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<pre><code>  3. 然后回到刚clone libass目录，执行：
+
+     <figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sh autogen.sh</span><br><span class="line">$ ./configure --prefix=/usr --<span class="keyword">disable</span>-static &amp;&amp; <span class="built_in">make</span></span><br><span class="line"><span class="comment">// 上面是在`ubuntu`上的，在`Mac OS上`不要指定安装目录，即如下：</span></span><br><span class="line">$ ./configure --<span class="keyword">disable</span>-static &amp;&amp; <span class="built_in">make</span></span><br><span class="line">$ sudo <span class="built_in">make</span> install</span><br><span class="line"><span class="comment">// 到此libass安装完成</span></span><br></pre></td></tr></table></figure>
+
+  4. 最后配置下环境路径：
+
+     `export PKG_CONFIG_PATH=/usr/local/ass/lib/pkgconfig:$PKG_CONFIG_PATH`
+</code></pre>
+<ol start="3">
+<li>
+<p>libaacplus无法通过brew来安装，安装方式如下：</p>
+<p><a href="https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20libaacplus" target="_blank" rel="noopener">FFmpeg libaacplus官方链接</a></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get install libfftw3-dev pkg-config autoconf automake libtool unzip</span></span><br><span class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/tipok.org.ua/downloads</span><span class="regexp">/media/aacplus</span><span class="regexp">/libaacplus/libaacplus</span>-<span class="number">2.0</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="variable">$ </span>tar -xzf libaacplus-<span class="number">2.0</span>.<span class="number">2</span>.tar.gz</span><br><span class="line"><span class="variable">$ </span>cd libaacplus-<span class="number">2.0</span>.<span class="number">2</span></span><br><span class="line"><span class="variable">$ </span>./autogen.sh --enable-shared --enable-static</span><br><span class="line"><span class="variable">$ </span>make</span><br><span class="line"><span class="variable">$ </span>sudo make install</span><br><span class="line"><span class="variable">$ </span>sudo ldconfig</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>libtool 安装</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -OL http:<span class="comment">//ftpmirror.gnu.org/libtool/libtool-2.4.2.tar.gz</span></span><br><span class="line">tar -xzf libtool-<span class="number">2.4</span>.<span class="number">2</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span></span><br><span class="line">cd libtool-<span class="number">2.4</span>.<span class="number">2</span></span><br><span class="line">./configure &amp;&amp; make &amp;&amp; sudo make install</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>brew 安装相关依赖包：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">参考 ffmpeg 官方文档：https:<span class="regexp">//</span>trac.ffmpeg.org<span class="regexp">/wiki/</span>CompilationGuide<span class="regexp">/macOS</span></span><br></pre></td></tr></table></figure>
+<p>$ brew install automake fdk-aac lame libass libtool libvorbis libvpx libvo-aacenc opencore-amr openjpeg opus sdl schroedinger shtool speex texi2html theora wget x264 xvid yasm</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>所有的相关依懒库我们都安装完成了，接下回到ffmpeg编译操作</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./configure --prefix=/usr/<span class="keyword">local</span> --<span class="keyword">enable</span>-gpl --<span class="keyword">enable</span>-nonfree --<span class="keyword">enable</span>-libass \</span><br><span class="line">--<span class="keyword">enable</span>-libfdk-aac --<span class="keyword">enable</span>-libfreetype --<span class="keyword">enable</span>-libmp3lame --<span class="keyword">enable</span>-libopus \</span><br><span class="line">--<span class="keyword">enable</span>-libtheora --<span class="keyword">enable</span>-libvorbis --<span class="keyword">enable</span>-libvpx --<span class="keyword">enable</span>-libx264 --<span class="keyword">enable</span>-libxvid --extra-ldflags=-L/usr/<span class="keyword">local</span>/<span class="keyword">lib</span></span><br><span class="line"></span><br><span class="line">$ <span class="built_in">make</span> &amp;&amp; <span class="built_in">make</span> install</span><br></pre></td></tr></table></figure>
+<p>以上额外依赖库说明：以下仅仅只是举例，具体参数请输入<code>./configure --help</code>查看:</p>
+<blockquote>
+<p><strong>x264</strong> 编码H.264视频，编译参数–enable-gpl --enable-libx264<br>
+<strong>fdk-aac</strong> 编码AAC音频，编译参数–enable-libfdk-aac<br>
+<strong>libvpx</strong> VP8/VP9视频编码器，编译参数–enable-libvpx<br>
+<strong>libvorbis</strong> 编码Vorbis音频，需要libogg。编译参数–enable-libvorbis<br>
+<strong>libopus</strong> 编码Opus音频。<br>
+<strong>LAME</strong> 编码MP3音频，编译参数–enable-libmp3lame<br>
+<strong>libass</strong> 字幕渲染器，编译参数–enable-libass</p>
+</blockquote>
+</li>
+<li>
+<p>至此我们已经编译出了ffmpeg的命令行工具：</p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190228111234.png" alt></p>
+</li>
+</ol>
+<p>提示：在安装依赖库时，在不同Mac OS系统上，可能会报错，特别是新系统版本，我编译过的最高系统版本是：Mac OS 10.14.1</p>
+<h3><span id="附brew-install-ffmpeg">附：brew install ffmpeg</span></h3>
+<figure class="highlight golo"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// 下面的每一个<span class="keyword">with</span>都是可选的，看你需要那些</span><br><span class="line">$ brew install ffmpeg \</span><br><span class="line">--<span class="keyword">with</span>-chromaprint \</span><br><span class="line">--<span class="keyword">with</span>-fdk-aac \</span><br><span class="line">--<span class="keyword">with</span>-libass \</span><br><span class="line">--<span class="keyword">with</span>-librsvg \</span><br><span class="line">--<span class="keyword">with</span>-libsoxr \</span><br><span class="line">--<span class="keyword">with</span>-libssh \</span><br><span class="line">--<span class="keyword">with</span>-libbluray \</span><br><span class="line">--<span class="keyword">with</span>-libbs2b \</span><br><span class="line">--<span class="keyword">with</span>-libcaca \</span><br><span class="line">--<span class="keyword">with</span>-libgsm \</span><br><span class="line">--<span class="keyword">with</span>-libmodplug \</span><br><span class="line">--<span class="keyword">with</span>-libvidstab \</span><br><span class="line">--<span class="keyword">with</span>-opencore-amr \</span><br><span class="line">--<span class="keyword">with</span>-openh264 \</span><br><span class="line">--<span class="keyword">with</span>-openjpeg \</span><br><span class="line">--<span class="keyword">with</span>-openssl \</span><br><span class="line">--<span class="keyword">with</span>-tesseract \</span><br><span class="line">--<span class="keyword">with</span>-rtmpdump \</span><br><span class="line">--<span class="keyword">with</span>-rubberband \</span><br><span class="line">--<span class="keyword">with</span>-sdl2 \</span><br><span class="line">--<span class="keyword">with</span>-snappy \</span><br><span class="line">--<span class="keyword">with</span>-tools \</span><br><span class="line">--<span class="keyword">with</span>-webp \</span><br><span class="line">--<span class="keyword">with</span>-x265 \</span><br><span class="line">--<span class="keyword">with</span>-xz \</span><br><span class="line">--<span class="keyword">with</span>-zeromq \</span><br><span class="line">--<span class="keyword">with</span>-zimg \</span><br><span class="line">--<span class="keyword">with</span>-frei0r \</span><br><span class="line">--<span class="keyword">with</span>-game-music-emu \</span><br><span class="line">--<span class="keyword">with</span>-<span class="keyword">filter</span>=drawtext \</span><br><span class="line">--<span class="keyword">with</span>-freetype \</span><br><span class="line">--<span class="keyword">with</span>-fontconfig \</span><br><span class="line">--<span class="keyword">with</span>-tools \</span><br><span class="line">--<span class="keyword">with</span>-fdk-aac \</span><br><span class="line">--<span class="keyword">with</span>-freetype \</span><br><span class="line">--<span class="keyword">with</span>-fontconfig \</span><br><span class="line">--<span class="keyword">with</span>-libass \</span><br><span class="line">--<span class="keyword">with</span>-libvorbis \</span><br><span class="line">--<span class="keyword">with</span>-libvpx \</span><br><span class="line">--<span class="keyword">with</span>-opus</span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/02/28/Mac-OS上编译ffmpegiOS平台库/" data-toggle="tooltip" data-placement="top" title="Mac OS上编译ffmpegiOS平台库">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/02/22/Node.js-入门篇/" data-toggle="tooltip" data-placement="top" title="Nodejs 入门篇">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">在 Mac OS 上编译ffmpeg命令行工具</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">编译ffmpeg命令行工具</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">附：brew install ffmpeg</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#ffmpeg" title="ffmpeg">ffmpeg</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://mmoaay.github.io" target="_blank">Mmoaay</a></li>
+                    
+                        <li><a href="http://posts.enumsblog.com/list" target="_blank">Enumsblog</a></li>
+                    
+                        <li><a href="http://www.blogfshare.com" target="_blank">AloneMonkey</a></li>
+                    
+                        <li><a href="http://tingxins.cn" target="_blank">Tingxins</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/28/Mac-OS上编译ffmpeg命令行工具/";
+    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/28/Mac-OS上编译ffmpeg命令行工具/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/being_sun_">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3108755861">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Nenhall 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.jianshu.com/u/51ba9ff4be5b/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '3e48be55277ebe20a86b88ff3ec1';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://www.jianshu.com/u/51ba9ff4be5b/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
