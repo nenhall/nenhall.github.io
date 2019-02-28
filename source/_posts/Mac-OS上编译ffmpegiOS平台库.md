@@ -115,4 +115,4 @@ tags:
 
 最后呈上[DEMO](https://github.com/nenhall/NHFFmpeg)
 
-![音视频开发交流群](https://github.com/nenhall/NHFFmpeg/blob/master/qcode.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200)
+![音视频开发交流群](http://upload-images.jianshu.io/upload_images/2443108-dd53439eb3250dd1?imageMogr2/auto-orient/strip%7CimageView2/2/w/240)
