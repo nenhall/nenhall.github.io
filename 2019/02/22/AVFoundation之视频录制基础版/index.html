@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+    <meta name="keyword" content="000000000000000000">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          AVFoundation之视频录制基础版 - Nenhall | 小浩浩工作室
+        
+    </title>
+
+    <link rel="canonical" href="https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/AVFoundation之视频录制基础版/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('undefined')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#AVFoundation" title="AVFoundation">AVFoundation</a>
+                            
+                        </div>
+                        <h1>AVFoundation之视频录制基础版</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Nenhall on
+                            2019-02-22
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">小浩浩工作室</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">关于我</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">时间线</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">文章标签</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>AVFoundation框架学习之视频录制基础版</p>
+<h2><span id="avfoundation框架简介">AVFoundation框架简介</span></h2>
+<h3><span id="在系统中的位置">在系统中的位置：</span></h3>
+<p><img src="https://upload-images.jianshu.io/upload_images/3691932-3a17b0a605bdfa18.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/565" alt="img"></p>
+<h3><span id="框架中主要得类和功能">框架中主要得类和功能：</span></h3>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AVAnimation</span>  <span class="comment">//动画类</span></span><br><span class="line"><span class="built_in">AVAsset</span>  <span class="comment">//资产类可通过这个类获得图片、文件、媒体库</span></span><br><span class="line">AssetDownloadTask  <span class="comment">//资源下载任务</span></span><br><span class="line"><span class="built_in">AVAssetExportSession</span>  <span class="comment">//资源导出会话:是一个通过资源文件对象去创建一个指定预设的输出的转码内容会话</span></span><br><span class="line"><span class="built_in">AVAssetImageGenerator</span>  <span class="comment">//用于截取视频某帧的画面</span></span><br><span class="line"><span class="built_in">AVAssetReader</span>  <span class="comment">//从资源读取音视频数据</span></span><br><span class="line"><span class="built_in">AVAssetReaderOutput</span>  <span class="comment">//读取资源文件输出类</span></span><br><span class="line"><span class="built_in">AVAssetResourceLoader</span>  <span class="comment">//资源文件的加载器会从AVURLAsset和代理方法得到加载的内容</span></span><br><span class="line"><span class="built_in">AVAssetTrack</span>  <span class="comment">//资源的分轨</span></span><br><span class="line"><span class="built_in">AVAssetTrackGroup</span>  <span class="comment">//这里面封装了一组资源的分轨</span></span><br><span class="line"><span class="built_in">AVAssetTrackSegment</span>  <span class="comment">//表示资源分轨的一段</span></span><br><span class="line"><span class="built_in">AVAssetWriter</span>  <span class="comment">//资源文件写入类</span></span><br><span class="line"><span class="built_in">AVAssetWriterInput</span>  <span class="comment">//写入文件的输入类</span></span><br><span class="line"><span class="built_in">AVAssetDownloadTask</span>  <span class="comment">//资源文件下载任务</span></span><br><span class="line"><span class="built_in">AVCaptureDevice</span>  <span class="comment">//硬件捕获设备类</span></span><br><span class="line"><span class="built_in">AVCaptureInput</span>  <span class="comment">//从硬件捕获设备获得输入的数据</span></span><br><span class="line"><span class="built_in">AVCaptureOutput</span>  <span class="comment">//获得输出的数据</span></span><br><span class="line"><span class="built_in">AVCaptureSession</span>  <span class="comment">//用于调配音视频输入与输出之间的数据流</span></span><br><span class="line"><span class="built_in">AVCaptureVideoPreviewLayer</span>  <span class="comment">//捕获的视频数据的预览图层</span></span><br><span class="line"><span class="built_in">AVMetadataObject</span>  <span class="comment">//音视频元数据是一个基类里面包含面部检测的元数据和二维码的元数据</span></span><br><span class="line"><span class="built_in">AVPlayer</span>  <span class="comment">//音视频播放器</span></span><br><span class="line"><span class="built_in">AVPlayerItem</span>  <span class="comment">//音视频播放的元素</span></span><br><span class="line"><span class="built_in">AVPlayerItemMediaDataCollector</span>  <span class="comment">//音视频播放器元素媒体数据收集器</span></span><br><span class="line"><span class="built_in">AVPlayerItemOutput</span>  <span class="comment">//播放器元素输出类</span></span><br><span class="line"><span class="built_in">AVPlayerItemTrack</span>  <span class="comment">//播放器元素的分轨</span></span><br><span class="line"><span class="built_in">AVPlayerLayer</span>  <span class="comment">//播放器的图层</span></span><br><span class="line"><span class="built_in">AVPlayerMediaSelectionCriteria</span>  <span class="comment">//播放器媒体选择的规范</span></span><br><span class="line"><span class="built_in">AVSampleBufferDisplayLayer</span>  <span class="comment">//用来显示压缩或解压的视频帧</span></span><br><span class="line"><span class="built_in">AVSynchronizedLayer</span>  <span class="comment">//同步动画图层</span></span><br><span class="line"><span class="built_in">AVTextStyleRule</span>  <span class="comment">//文本样式的规范</span></span><br><span class="line"><span class="built_in">AVVideoCompositing</span>  <span class="comment">//视频合成的协议</span></span><br><span class="line"><span class="built_in">AVAudioSettings</span>  <span class="comment">//音频的配置信息</span></span><br><span class="line"><span class="built_in">AVAudioEngine</span>  <span class="comment">//音频引擎</span></span><br><span class="line"><span class="built_in">AVAudioNode</span>  <span class="comment">//音频节点</span></span><br><span class="line"><span class="built_in">AVAudioTime</span>  <span class="comment">//音频时间类</span></span><br><span class="line"><span class="built_in">AVMIDIPlayer</span>  <span class="comment">//MIDI播放器</span></span><br><span class="line"><span class="built_in">AVAudioSession</span>  <span class="comment">//音频会话</span></span><br></pre></td></tr></table></figure>
+<h3><span id="主要应用场景">主要应用场景：</span></h3>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">* </span>音频的录制、播放</span><br><span class="line"><span class="bullet">* </span>视频的播放</span><br><span class="line"><span class="bullet">* </span>媒体文件检查</span><br><span class="line"><span class="bullet">* </span>媒体捕捉</span><br><span class="line"><span class="bullet">* </span>媒体编辑</span><br><span class="line"><span class="bullet">* </span>媒体处理</span><br><span class="line"><span class="bullet">* </span>媒体采样</span><br><span class="line"><span class="bullet">* </span>媒体压缩</span><br><span class="line"><span class="bullet">* </span>音频编解码</span><br><span class="line"><span class="bullet">* </span>视频编解码</span><br><span class="line"><span class="bullet">* </span>音频的音效处理</span><br></pre></td></tr></table></figure>
+<h2><span id="视频流处理">视频流处理</span></h2>
+<p><img src="https:////upload-images.jianshu.io/upload_images/3691932-a46c3cc54b405348.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/500" alt="img"></p>
+<ul>
+<li>
+<p>AVCaptureDevice  //代表了输入设备,例如摄像头与麦克风。</p>
+<blockquote>
+<p>输入设备，包括麦克风、摄像头，通过该对象可以设置物理设备的一些属性（例如相机聚焦、白平衡等）。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>
+<p>AVCaptureDeviceInput</p>
+<blockquote>
+<p>设备输入数据管理对象，可以根据AVCaptureDevice创建对应AVCaptureDeviceInput对象，该对象将会被添加到AVCaptureSession中管理。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>
+<p>AVCaptureInput  //代表了输入数据源</p>
+</li>
+<li>
+<p>AVCaptureOutput  //代表了输出数据源</p>
+<blockquote>
+<p>输出数据管理对象，用于接收各类输出数据，通常使用对应的子类<code>AVCaptureAudioDataOutput</code>、<code>AVCaptureStillImageOutput</code>、<code>AVCaptureVideoDataOutput</code>、<code>AVCaptureFileOutput</code>，该对象将会被添加到AVCaptureSession中管理。注意：前面几个对象的输出数据都是<code>NSData</code>类型，而AVCaptureFileOutput代表数据以文件形式输出，类似的，AVCcaptureFileOutput也不会直接创建使用，通常会使用其子类：<code>AVCaptureAudioFileOutput</code>、AVCaptureMovieFileOutput`。当把一个输入或者输出添加到AVCaptureSession之后AVCaptureSession就会在所有相符的输入、输出设备之间建立连接</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>
+<p>AVCaptureSession  //用于协调输入与输出之间的数据流</p>
+<blockquote>
+<p>媒体（音、视频）捕获会话，负责把捕获的音视频数据输出到输出设备中。一个<code>AVCaptureSession</code>可以有多个输入输出。 <code>AVCaptureSession</code>是<code>AVFoundation</code>捕捉类的中心枢纽，在视频捕获时,客户端可以实例化<code>AVCaptureSession</code>并添加适当的<code>AVCaptureInputs</code>、<code>AVCaptureDeviceInput</code>和输出，比如<code>AVCaptureMovieFileOutput</code>。通过<code>[AVCaptureSession startRunning]</code>开始数据流从输入到输出,和<code>[AVCaptureSession stopRunning]</code>停止输出输入的流动。客户端可以通过设置<code>sessionPreset</code>属性定制录制质量水平或输出的比特率。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>
+<p><code>AVCaptureVideoPreviewLayer</code></p>
+<blockquote>
+<p>相机拍摄预览图层，是<code>CALayer</code>的子类，使用该对象可以实时查看拍照或视频录制效果，创建该对象需要指定对应的AVCaptureSession对象</p>
+</blockquote>
+</li>
+</ul>
+<h2><span id="实例">实例</span></h2>
+<ul>
+<li>
+<p>创建捕捉会话AVCaptureSession</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> //捕获会话</span><br><span class="line">_captureSession = [[AVCaptureSession alloc] init];</span><br><span class="line">//设置清晰度</span><br><span class="line">if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) &#123;</span><br><span class="line">    self.captureSession.sessionPreset = AVCaptureSessionPreset1280x720;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    self.captureSession.sessionPreset = AVCaptureSessionPreset640x480;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>获取视频设备</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//方法一：选择广角前置摄像头，因为默认的就是广角摄像头</span><br><span class="line">AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];</span><br><span class="line"></span><br><span class="line">//方法二：从系统的媒体设备组中查找设备，这种方式得到的设备类型即是：</span><br><span class="line">//       `deviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera`</span><br><span class="line">- (AVCaptureDevice *)deviceWithMediaType:(AVMediaType)mediaType position:(AVCaptureDevicePosition)position</span><br><span class="line">&#123;</span><br><span class="line">    NSArray *devices = [AVCaptureDevice devicesWithMediaType:mediaType];</span><br><span class="line">    AVCaptureDevice *captureDevice = devices.firstObject;</span><br><span class="line"></span><br><span class="line">    for (AVCaptureDevice *dinput in devices) &#123;</span><br><span class="line">        if (dinput.position == position) &#123;</span><br><span class="line">            captureDevice = dinput;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return captureDevice;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>创建媒体视频输入源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NSError *getDeviceInputErr;</span><br><span class="line">AVCaptureDeviceInput *deviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:&amp;getDeviceInputErr];</span><br><span class="line">if (getDeviceInputErr) &#123;</span><br><span class="line">    NSLog(@&quot;获取输入设备失败&quot;);</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>创建媒体音频输入源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NSError *getaudioInputErr;</span><br><span class="line">AVCaptureDevice *audio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];</span><br><span class="line">AVCaptureDeviceInput *audioInput = [AVCaptureDeviceInput deviceInputWithDevice:audio error:&amp;getaudioInputErr];</span><br><span class="line">if (getaudioInputErr) &#123;</span><br><span class="line">    NSLog(@&quot;获取音频输入设备失败&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>创建视频输出对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];</span><br><span class="line"></span><br><span class="line">////////////////////////以下设置为可选////////////////////////</span><br><span class="line">//设置链接管理对象</span><br><span class="line">AVCaptureConnection *captureConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];</span><br><span class="line">//设置连接管理对象</span><br><span class="line">//视频稳定设置</span><br><span class="line">if ([captureConnection isVideoStabilizationSupported]) &#123;</span><br><span class="line">     captureConnection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;</span><br><span class="line"> &#125;</span><br><span class="line">//视频旋转方向的设置</span><br><span class="line">captureConnection.videoScaleAndCropFactor = captureConnection.videoMaxScaleAndCropFactor;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>将创建的所有输入、输出源添加到视频捕捉会话对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[_captureSession beginConfiguration];</span><br><span class="line"></span><br><span class="line">if ([_captureSession canAddInput:deviceInp</span><br><span class="line">    [_captureSession addInput:deviceInput]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if ([_captureSession canAddInput:audioInpu</span><br><span class="line">    [_captureSession addInput:audioInput];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if ([_captureSession canAddOutput:movieFileOutput]) &#123;</span><br><span class="line">    [_captureSession addOutput:movieFileOutput];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[_captureSession commitConfiguration];</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>创建视频预览层</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//创建预览层</span><br><span class="line">AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];</span><br><span class="line">previewLayer.frame = CGRectMake(0, 0, self.playerLayer.bounds.size.width, self.playerLayer.bounds.size.height);</span><br><span class="line">previewLayer.connection.videoOrientation = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo].videoOrientation;</span><br><span class="line">[self.playerLayer.layer addSublayer:previewLayer];</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>开始预览视频</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[_captureSession startRunning];</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>开始录制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//设置视频存放路径</span><br><span class="line">NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@&quot;%@move.mov&quot;,NSTemporaryDirectory()]];</span><br><span class="line">//开始录制视频</span><br><span class="line">[_movieFileOutput startRecordingToOutputFileURL:url recordingDelegate:self];</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>停止录制</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[_movieFileOutput stopRecording]</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3><span id="请求相机权限">请求相机权限</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">- (void)getCameraAuthorization &#123;</span><br><span class="line">    </span><br><span class="line">    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];</span><br><span class="line">    switch (status) &#123;</span><br><span class="line">        case AVAuthorizationStatusNotDetermined:</span><br><span class="line">        &#123;</span><br><span class="line">            NSLog(@&quot;相机权限：未设置过权限&quot;);</span><br><span class="line">            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) &#123;</span><br><span class="line">                </span><br><span class="line">                if (granted) &#123;</span><br><span class="line">                    NSLog(@&quot;请求授权成功&quot;);</span><br><span class="line">                    [self createAV];</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    NSLog(@&quot;请求授权失败&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;];</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case AVAuthorizationStatusRestricted:</span><br><span class="line">        &#123;</span><br><span class="line">            NSLog(@&quot;相机权限：无权访问这项权限&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case AVAuthorizationStatusDenied:</span><br><span class="line">        &#123;</span><br><span class="line">            NSLog(@&quot;相机权限：拒绝&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case AVAuthorizationStatusAuthorized:</span><br><span class="line">        &#123;</span><br><span class="line">            [self createAV];</span><br><span class="line">            NSLog(@&quot;相机权限：已授权&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>demo地址：<a href="https://github.com/ruqibazao/AVFoundation_note.git" target="_blank" rel="noopener">https://github.com/ruqibazao/AVFoundation_note.git</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/02/22/iOS-Category/" data-toggle="tooltip" data-placement="top" title="iOS-Category">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/22/1677ziyouxing/" data-toggle="tooltip" data-placement="top" title="穿越318线川藏游记">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">AVFoundation框架简介</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">在系统中的位置：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">框架中主要得类和功能：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">主要应用场景：</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">视频流处理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">实例</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">请求相机权限</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#AVFoundation" title="AVFoundation">AVFoundation</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://mmoaay.github.io" target="_blank">Mmoaay</a></li>
+                    
+                        <li><a href="http://posts.enumsblog.com/list" target="_blank">Enumsblog</a></li>
+                    
+                        <li><a href="http://www.blogfshare.com" target="_blank">AloneMonkey</a></li>
+                    
+                        <li><a href="http://tingxins.cn" target="_blank">Tingxins</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/AVFoundation之视频录制基础版/";
+    var disqus_url = "https://www.jianshu.com/u/51ba9ff4be5b/2019/02/22/AVFoundation之视频录制基础版/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/being_sun_">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3108755861">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/nenhall">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Nenhall 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.jianshu.com/u/51ba9ff4be5b/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '3e48be55277ebe20a86b88ff3ec1';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://www.jianshu.com/u/51ba9ff4be5b/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

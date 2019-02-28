@@ -209,6 +209,37 @@
 
 <div class="post-preview">
 
+    <a href="/2018/08/29/《这一年》滔滔逝水，急急流年/">
+        <h2 class="post-title">
+            《这一年》滔滔逝水，急急流年
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            滔滔逝水，急急流年，几几个这一年弹指飞过，回首前尘，恍如一梦。
+这一年我们很小，我们有很多的差不多年龄的人一起无忧无虑的玩耍，再是一起在乡村上小学一直到上初中都可以不分开，
+这一年我们初中毕业，也是我们的一过分离点或许此时的我们还会考入同一学校，这一年的年尾我们都会回家，相隔半年的我们可以相聚，一起诉说自己第一次走出自己家乡的感觉、更有说不玩的趣事，待过年后正月初，又各奔西东.
+这一年手机或......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Nenhall on
+            2018-08-29
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#生活随笔" title="生活随笔">生活随笔</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/08/29/iOS-armv7-armv7s-arm64区别与应用32位、64位配置/">
         <h2 class="post-title">
             iOS armv7, armv7s, arm64区别与应用32位、64位配置
@@ -344,20 +375,17 @@ iOS10.3公测版发布:封杀32位应用；
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/KVC实现原理/">
+    <a href="/2018/08/17/KVO实现原理/">
         <h2 class="post-title">
-            KVC实现原理
+            KVO的实现原理
         </h2>
         <h3 class="post-subtitle">
-            KVC的底层实现原理解析
+            
         </h3>
         <div class="post-content-preview">
-            KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性
-常见的API有
-
-- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
-- (void)setValue:(id)value forKey:(NSString *)key;
-- (id)valueForKeyPath:(NSStr......
+            Key Value Observe
+基本使用：
+1234567891011121314151617@implementation ViewController- (void)viewDidLoad &#123;[super viewDidLoad];self.person1 = [[Person alloc] init];self.person2 = [[Person alloc] init......
         </div>
     </a>
     
@@ -379,17 +407,27 @@ iOS10.3公测版发布:封杀32位应用；
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/KVO实现原理/">
+    <a href="/2018/08/17/OC对象分类/">
         <h2 class="post-title">
-            KVO的实现原理
+            OC对象分类
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            Key Value Observe
-基本使用：
-1234567891011121314151617@implementation ViewController- (void)viewDidLoad &#123;[super viewDidLoad];self.person1 = [[Person alloc] init];self.person2 = [[Person alloc] init......
+            OC对象分类
+
+OC对象分类：instance对象(实例对象)、class对象(类对象)、meta-class对象(元类对象)；
+
+instance对象
+**定义：**通过类alloc出来的对象，就是instance对象，每次调用alloc都会产生新的instance对象；
+instance对象在内存中存储的信息包括：
+
+isa指针；
+其它成员变量；
+
+class对象
+注意：每个类对象在内存......
         </div>
     </a>
     
@@ -452,27 +490,20 @@ OC代码转成C++代码：
 
 <div class="post-preview">
 
-    <a href="/2018/08/17/OC对象分类/">
+    <a href="/2018/08/17/KVC实现原理/">
         <h2 class="post-title">
-            OC对象分类
+            KVC实现原理
         </h2>
         <h3 class="post-subtitle">
-            
+            KVC的底层实现原理解析
         </h3>
         <div class="post-content-preview">
-            OC对象分类
+            KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性
+常见的API有
 
-OC对象分类：instance对象(实例对象)、class对象(类对象)、meta-class对象(元类对象)；
-
-instance对象
-**定义：**通过类alloc出来的对象，就是instance对象，每次调用alloc都会产生新的instance对象；
-instance对象在内存中存储的信息包括：
-
-isa指针；
-其它成员变量；
-
-class对象
-注意：每个类对象在内存......
+- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
+- (void)setValue:(id)value forKey:(NSString *)key;
+- (id)valueForKeyPath:(NSStr......
         </div>
     </a>
     
@@ -528,10 +559,6 @@ class对象
     <div class="tags">
         
             
-            <a href="/tags/#ffmpeg" title="ffmpeg" rel="2">ffmpeg</a>
-            
-        
-            
             <a href="/tags/#NSObject" title="NSObject" rel="8">NSObject</a>
             
         
@@ -540,9 +567,15 @@ class对象
             
         
             
+            <a href="/tags/#ffmpeg" title="ffmpeg" rel="2">ffmpeg</a>
+            
+        
+            
         
             
             <a href="/tags/#生活随笔" title="生活随笔" rel="5">生活随笔</a>
+            
+        
             
         
             
@@ -682,7 +715,7 @@ class对象
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">11</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">11</span></li></ul>
     </div>
 
         <hr>
