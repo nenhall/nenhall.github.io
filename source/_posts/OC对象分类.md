@@ -90,11 +90,11 @@ class_isMetaClass(obj);
 
 **注意：**由于NSObject没有superclass，但也不是为空，而是：基类的meta-class对象的superclass指向的是基类的class(类对象)(如下图三)，
 
-![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180731212009.png)
+![class 对象的 superclass 指针](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190306193101.png)
 
-![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180731212009.png)
+![isa指针](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190306192815.png)
 
-![](http://pbflin9sq.bkt.clouddn.com/20180801204622.png)
+![](https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190306193409.png)
 
 按上面的流程，举个例分析说明：
 
@@ -106,7 +106,7 @@ Student *stu = [[Student alloc] init];
 
 > stu调用`test`的调用流程：首先test是对象方法，而对象方法是放在class里面，
 > 流程：通过stu通过自己的isa找到他自己的class，在class对象中找test方法，如果有就展开调用,如果没有class通过isa去superclass的里面找(一层层的往上找，直到继承关系走完)，如果还没有，superclass通过自己的isa去meta-class里面找，最后走到NSObject，如果还是没有找到就会报错："unreconized selector sent to instance"
-> 注意：如果在调用类方法`classTest`，因找不到方法崩溃之前，其实还有最后一步流程，也是我们一般没注意的地方，在基类的meta-class对象找不到`classTest`方法时，它还会去基类的类对象里面找(即上图右上角转角那个箭头)，如果则调用，否则才报错。
+> 注意：如果在调用类方法`classTest`，因找不到方法崩溃之前，其实还有最后一步流程，也是我们一般没注意的地方，在基类的meta-class对象找不到`classTest`方法时，它还会去基类的类对象里面找(即上图右上角转角那个箭头)，如果有则调用，否则才报错。
 >
 > 可能你觉得很奇怪，meta-class里面存放的是类方法，类里面存放的是对象方法，为什么meta-class类对象里面找不到方法时会找到类的对象方法里面去？具体这个根runtime机制有关，后面有时间我会写runtime相关的问题；
 
@@ -114,10 +114,6 @@ Student *stu = [[Student alloc] init];
 
 ```objective-c
 @implementation NSObject (Test)
-+ (void)test {
-    NSLog(@"+[NSObject test] - %p", self);
-}
-
 - (void)test {
     NSLog(@"-[NSObject test] - %p", self);
 }
@@ -125,9 +121,7 @@ Student *stu = [[Student alloc] init];
 
 // Person
 @interface Person : NSObject
-
 - (void)test;
-
 @end
 
 @implementation Person
@@ -159,7 +153,7 @@ int main(int argc, const char * argv[]) {
 
 #### OC的类信息存放在哪里？
 
-* **对象方法、属性、成员变量、协议信息，存放在class对象中；
+* **对象方法、属性、成员变量、协议信息，存放在class对象中；**
 * **类方法，存放在meta-class对象中；**
 * **成员变量的具体值，存放在instance对象；**
 
@@ -171,4 +165,5 @@ int main(int argc, const char * argv[]) {
 
 已经编译好一个从objc_runtime源码抽出来工程，可以清楚看到objc_class的内部结构：
 
-代码地址：[窥struct objc_class结构体](https://github.com/nenhall/struct-objc_class)
+代码地址：[窥struct objc_class结构体](https://github.com/ruqibazao/struct-objc_class)
+

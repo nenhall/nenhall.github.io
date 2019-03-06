@@ -247,4 +247,6 @@ didChangeVlaueForKey:的内部会触发Oberser的监听方法；
 
 不会，必须调用对应的set方法，才会触发KVO；
 
+**注意：**通过 KVC 修改属性也会触发 KVO 监听，因为 KVC 中setValue:forKey:会按照setKey、_setKey的顺序查找方法
+
 

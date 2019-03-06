@@ -40,7 +40,7 @@ tags:
 
    
 
-### get时的查找顺序
+### get时的查找顺序：getKey >> key >> isKey >> _key
 
 ```objective-c
 @interface Person : NSObject
