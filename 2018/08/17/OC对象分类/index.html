@@ -289,19 +289,19 @@
 <p><strong>class的superclass指向父类的class，如果没有父类，superclass指针为nil；</strong></p>
 <p><strong>meta-class的superclass指向的是父类的meta-class</strong></p>
 <p>**注意：**由于NSObject没有superclass，但也不是为空，而是：基类的meta-class对象的superclass指向的是基类的class(类对象)(如下图三)，</p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180731212009.png" alt></p>
-<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180731212009.png" alt></p>
-<p><img src="http://pbflin9sq.bkt.clouddn.com/20180801204622.png" alt></p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190306193101.png" alt="class 对象的 superclass 指针"></p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190306192815.png" alt="isa指针"></p>
+<p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20190306193409.png" alt></p>
 <p>按上面的流程，举个例分析说明：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Student *stu = [[Student alloc] init];</span><br><span class="line">[stu test];//调用对象方法</span><br><span class="line">[stu classTest];//调用类方法</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>stu调用<code>test</code>的调用流程：首先test是对象方法，而对象方法是放在class里面，<br>
 流程：通过stu通过自己的isa找到他自己的class，在class对象中找test方法，如果有就展开调用,如果没有class通过isa去superclass的里面找(一层层的往上找，直到继承关系走完)，如果还没有，superclass通过自己的isa去meta-class里面找，最后走到NSObject，如果还是没有找到就会报错：&quot;unreconized selector sent to instance&quot;<br>
-注意：如果在调用类方法<code>classTest</code>，因找不到方法崩溃之前，其实还有最后一步流程，也是我们一般没注意的地方，在基类的meta-class对象找不到<code>classTest</code>方法时，它还会去基类的类对象里面找(即上图右上角转角那个箭头)，如果则调用，否则才报错。</p>
+注意：如果在调用类方法<code>classTest</code>，因找不到方法崩溃之前，其实还有最后一步流程，也是我们一般没注意的地方，在基类的meta-class对象找不到<code>classTest</code>方法时，它还会去基类的类对象里面找(即上图右上角转角那个箭头)，如果有则调用，否则才报错。</p>
 <p>可能你觉得很奇怪，meta-class里面存放的是类方法，类里面存放的是对象方法，为什么meta-class类对象里面找不到方法时会找到类的对象方法里面去？具体这个根runtime机制有关，后面有时间我会写runtime相关的问题；</p>
 </blockquote>
 <p>可以进行如下测试：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">@implementation NSObject (Test)</span><br><span class="line">+ (void)test &#123;</span><br><span class="line">    NSLog(@&quot;+[NSObject test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)test &#123;</span><br><span class="line">    NSLog(@&quot;-[NSObject test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// Person</span><br><span class="line">@interface Person : NSObject</span><br><span class="line"></span><br><span class="line">- (void)test;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line">- (void)test &#123;</span><br><span class="line">    NSLog(@&quot;+[Person test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSLog(@&quot;[Person class] - %p&quot;, [Person class]);</span><br><span class="line">        NSLog(@&quot;[NSObject class] - %p&quot;, [NSObject class]);</span><br><span class="line">        [Person test];</span><br><span class="line">        [NSObject test];</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@implementation NSObject (Test)</span><br><span class="line">- (void)test &#123;</span><br><span class="line">    NSLog(@&quot;-[NSObject test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// Person</span><br><span class="line">@interface Person : NSObject</span><br><span class="line">- (void)test;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line">- (void)test &#123;</span><br><span class="line">    NSLog(@&quot;+[Person test] - %p&quot;, self);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSLog(@&quot;[Person class] - %p&quot;, [Person class]);</span><br><span class="line">        NSLog(@&quot;[NSObject class] - %p&quot;, [NSObject class]);</span><br><span class="line">        [Person test];</span><br><span class="line">        [NSObject test];</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面我们在NSObject类扩展中申明和实现了一个实例方法，调用的时候调用的是类方法，但你会神奇的发现不会崩溃，而且调用者分别是Person、NSObject；其实就是我们上面所说到的<strong>在基类的meta-class对象找不到<code>test</code>方法时，它还会去基类的类对象里面找</strong>.</p>
 <h3><span id="结论">结论：</span></h3>
 <h4><span id="对象的isa指针指向哪里">对象的isa指针指向哪里？</span></h4>
@@ -312,7 +312,7 @@
 </ul>
 <h4><span id="oc的类信息存放在哪里">OC的类信息存放在哪里？</span></h4>
 <ul>
-<li>**对象方法、属性、成员变量、协议信息，存放在class对象中；</li>
+<li><strong>对象方法、属性、成员变量、协议信息，存放在class对象中；</strong></li>
 <li><strong>类方法，存放在meta-class对象中；</strong></li>
 <li><strong>成员变量的具体值，存放在instance对象；</strong></li>
 </ul>
@@ -320,7 +320,7 @@
 <p>从objc_runtime源码得到如下结构图：</p>
 <p><img src="https://blogimage-1257063273.cos.ap-guangzhou.myqcloud.com/20180801223018.png" alt></p>
 <p>已经编译好一个从objc_runtime源码抽出来工程，可以清楚看到objc_class的内部结构：</p>
-<p>代码地址：<a href="https://github.com/nenhall/struct-objc_class" target="_blank" rel="noopener">窥struct objc_class结构体</a></p>
+<p>代码地址：<a href="https://github.com/ruqibazao/struct-objc_class" target="_blank" rel="noopener">窥struct objc_class结构体</a></p>
 
                 
 
